@@ -18,5 +18,16 @@ namespace AgencyService.Service
             var items = await _unitOfWork.ServiceOfferItemRepository.GetAll();
             return items.ToList();
         }
+
+        public async Task<ServiceOfferItem> GetServiceOfferItemById(int id)
+        {
+            ServiceOfferItem? ret = await _unitOfWork.ServiceOfferItemRepository.Get(x => x.Id == id);
+            if(ret == null)
+            {
+                return null!;
+            }
+
+            return ret;
+        }
     }
 }

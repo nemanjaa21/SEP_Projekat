@@ -9,6 +9,7 @@ namespace AgencyService.Mapping
         public MappingProfile()
         {
             CreateMap<ServiceOfferItem, ServiceOfferItemDto>().ReverseMap();
+            CreateMap<ServiceOffer, ServiceOfferDto>().ReverseMap();
         }
     }
 }

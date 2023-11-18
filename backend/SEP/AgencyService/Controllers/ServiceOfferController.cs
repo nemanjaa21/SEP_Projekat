@@ -1,8 +1,10 @@
 ﻿using AgencyService.DTO;
 using AgencyService.Interfaces;
+using AgencyService.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AgencyService.Controllers
 {
@@ -10,21 +12,31 @@ namespace AgencyService.Controllers
     [ApiController]
     public class ServiceOfferController : ControllerBase
     {
-        private readonly IServiceOfferItemService _serviceOfferItemService;
+        private readonly IServiceOfferService _serviceOfferService;
         private readonly IMapper _mapper;
 
-        public ServiceOfferController(IServiceOfferItemService serviceOfferItemService, IMapper mapper)
+        public ServiceOfferController(IServiceOfferService serviceOfferService, IMapper mapper)
         {
-                _serviceOfferItemService = serviceOfferItemService;
-                _mapper = mapper;
+            _serviceOfferService = serviceOfferService;
+            _mapper = mapper;
         }
 
-        [HttpGet("get-all-service-offer-item")]
-        public async Task<IActionResult> GetAllServiceOfferItem()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetServiceOffer(int id)
         {
-            var items = await _serviceOfferItemService.GetAllServiceOfferItem();
-            List<ServiceOfferItemDto> itemsDto = _mapper.Map<List<ServiceOfferItemDto>>(items);
-            return Ok(itemsDto);
+            var serviceOffer = await _serviceOfferService.GetServiceOfferById(id);
+            if (serviceOffer == null)
+            {
+                return NotFound($"Service offer with id {id} does not exist!");
+            }
+            return Ok(_mapper.Map<ServiceOfferDto>(serviceOffer));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateServiceOffer(Dictionary<int, bool> ids)
+        {
+            var serviceOffer = _mapper.Map<ServiceOfferDto>(await _serviceOfferService.CreateServiceOffer(ids));            
+            return Ok(serviceOffer);
         }
     }
 }

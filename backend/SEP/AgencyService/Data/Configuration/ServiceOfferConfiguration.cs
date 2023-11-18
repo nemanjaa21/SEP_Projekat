@@ -9,6 +9,7 @@ namespace AgencyService.Data.Configuration
         public void Configure(EntityTypeBuilder<ServiceOffer> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.TotalPrice).IsRequired();
         }
     }
 }

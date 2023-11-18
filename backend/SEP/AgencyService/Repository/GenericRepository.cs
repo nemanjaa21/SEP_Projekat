@@ -1,6 +1,7 @@
 ﻿using AgencyService.Interfaces;
 using AgencyService.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AgencyService.Repository
 {
@@ -18,9 +19,18 @@ namespace AgencyService.Repository
             return await Task.FromResult(entities);
         }
 
-        public async Task<T?> Get(int id)
+        public async Task<T?> Get(Expression<Func<T, bool>> expression, List<string>? includes = null)
         {
-            return await entities.FirstOrDefaultAsync(x => x.Id == id);
+            IQueryable<T> query = entities;
+            if (includes != null)
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return (await query.FirstOrDefaultAsync(expression))!;
         }
 
         public async Task Insert(T entity)

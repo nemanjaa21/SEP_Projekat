@@ -3,6 +3,7 @@ using AgencyService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgencyService.Migrations
 {
     [DbContext(typeof(AgencyServiceDBContext))]
-    partial class AgencyServiceDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231118212126_AddTotalMigration")]
+    partial class AddTotalMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace AgencyService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("AgencyService.Models.ServiceOfferItem", b =>
@@ -62,7 +64,7 @@ namespace AgencyService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OfferItems", (string)null);
+                    b.ToTable("OfferItems");
 
                     b.HasData(
                         new
@@ -87,7 +89,7 @@ namespace AgencyService.Migrations
 
                     b.HasIndex("ServiceOffersId");
 
-                    b.ToTable("ServiceOfferServiceOfferItem", (string)null);
+                    b.ToTable("ServiceOfferServiceOfferItem");
                 });
 
             modelBuilder.Entity("ServiceOfferServiceOfferItem", b =>
