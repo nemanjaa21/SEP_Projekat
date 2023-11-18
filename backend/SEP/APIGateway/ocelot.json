@@ -1,0 +1,16 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/ServiceOffer/get-all-service-offer-item",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5069
+        }
+      ],
+      "UpstreamPathTemplate": "/get-all-service-offer-item",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+  ]
+}
