@@ -31,7 +31,7 @@ namespace AgencyService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Offers");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("AgencyService.Models.ServiceOfferItem", b =>
@@ -54,33 +54,52 @@ namespace AgencyService.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("CODIFICATION_OF_LAWS");
 
-                    b.Property<int>("ServiceOfferId")
-                        .HasColumnType("int");
-
                     b.Property<int>("YearlyPrice")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceOfferId");
+                    b.ToTable("OfferItems", (string)null);
 
-                    b.ToTable("OfferItems");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsAccepted = false,
+                            MonthlyPrice = 250,
+                            OfferName = "CODIFICATION_OF_LAWS",
+                            YearlyPrice = 1250
+                        });
                 });
 
-            modelBuilder.Entity("AgencyService.Models.ServiceOfferItem", b =>
+            modelBuilder.Entity("ServiceOfferServiceOfferItem", b =>
                 {
-                    b.HasOne("AgencyService.Models.ServiceOffer", "ServiceOffer")
-                        .WithMany("ServiceOfferItems")
-                        .HasForeignKey("ServiceOfferId")
+                    b.Property<int>("ServiceOfferItemsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceOffersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ServiceOfferItemsId", "ServiceOffersId");
+
+                    b.HasIndex("ServiceOffersId");
+
+                    b.ToTable("ServiceOfferServiceOfferItem", (string)null);
+                });
+
+            modelBuilder.Entity("ServiceOfferServiceOfferItem", b =>
+                {
+                    b.HasOne("AgencyService.Models.ServiceOfferItem", null)
+                        .WithMany()
+                        .HasForeignKey("ServiceOfferItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ServiceOffer");
-                });
-
-            modelBuilder.Entity("AgencyService.Models.ServiceOffer", b =>
-                {
-                    b.Navigation("ServiceOfferItems");
+                    b.HasOne("AgencyService.Models.ServiceOffer", null)
+                        .WithMany()
+                        .HasForeignKey("ServiceOffersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

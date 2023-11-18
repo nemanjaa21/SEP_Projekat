@@ -8,7 +8,6 @@ namespace AgencyService.Models
         public bool IsAccepted { get; set; }
         public int MonthlyPrice { get; set; }
         public int YearlyPrice { get; set; }
-        public ServiceOffer ServiceOffer { get; set; }
-        public int ServiceOfferId { get; set; }
+        public List<ServiceOffer> ServiceOffers { get; set; }
     }
 }

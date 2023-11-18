@@ -22,7 +22,7 @@ namespace AgencyService.Controllers
         [HttpGet("get-all-service-offer-item")]
         public async Task<IActionResult> GetAllServiceOfferItem()
         {
-            var items = _serviceOfferItemService.GetAllServiceOfferItem();
+            var items = await _serviceOfferItemService.GetAllServiceOfferItem();
             List<ServiceOfferItemDto> itemsDto = _mapper.Map<List<ServiceOfferItemDto>>(items);
             return Ok(itemsDto);
         }

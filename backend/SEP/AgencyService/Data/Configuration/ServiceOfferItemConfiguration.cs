@@ -15,9 +15,16 @@ namespace AgencyService.Data.Configuration
             builder.Property(x => x.IsAccepted);
             builder.Property(x=> x.MonthlyPrice).IsRequired();
             builder.Property(x=> x.YearlyPrice).IsRequired();
-            builder.HasOne(x => x.ServiceOffer).WithMany(x => x.ServiceOfferItems)
-                                                .HasForeignKey(x => x.ServiceOfferId)
-                                                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.ServiceOffers).WithMany(x => x.ServiceOfferItems);
+
+            builder.HasData(new ServiceOfferItem()
+            {
+                Id = 1,
+                OfferName = EOfferName.CODIFICATION_OF_LAWS,
+                IsAccepted = false,
+                MonthlyPrice = 250,
+                YearlyPrice = 1250
+            });
         }
     }
 }
