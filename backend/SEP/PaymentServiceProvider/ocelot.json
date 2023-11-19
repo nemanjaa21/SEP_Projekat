@@ -1,0 +1,52 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/CardPayment/payment",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5049
+        }
+      ],
+      "UpstreamPathTemplate": "/card-payment",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/BitcoinPayment/payment",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5155
+        }
+      ],
+      "UpstreamPathTemplate": "/bitcoin-payment",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/QRCodePayment/payment",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5243
+        }
+      ],
+      "UpstreamPathTemplate": "/qrcode-payment",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5057
+        }
+      ],
+      "DownstreamPathTemplate": "/api/PayPalPayment/payment",
+      "DownstreamScheme": "http",
+      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamPathTemplate": "/paypal-payment"
+    }
+  ]
+}
