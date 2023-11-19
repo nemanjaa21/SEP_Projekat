@@ -1,11 +1,11 @@
-﻿using AuthService.Interfaces;
-using AuthService.Models;
+﻿using PaymentServiceProvider.Interfaces;
+using PaymentServiceProvider.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AuthService.Repository
+namespace PaymentServiceProvider.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : User
+    public class GenericRepository<T> : IGenericRepository<T> where T : PaymentService
     {
         private readonly DbContext _dbContext;
         private DbSet<T> entities;

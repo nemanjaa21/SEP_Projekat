@@ -47,6 +47,18 @@
       "DownstreamScheme": "http",
       "UpstreamHttpMethod": [ "Get" ],
       "UpstreamPathTemplate": "/paypal-payment"
+    },
+    {
+      "DownstreamPathTemplate": "/api/PaymentService/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5248
+        }
+      ],
+      "UpstreamPathTemplate": "/payment-methods",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ]
 }

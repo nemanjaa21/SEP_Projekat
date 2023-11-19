@@ -1,9 +1,9 @@
-﻿using AuthService.Models;
+﻿using PaymentServiceProvider.Models;
 using System.Linq.Expressions;
 
-namespace AuthService.Interfaces
+namespace PaymentServiceProvider.Interfaces
 {
-    public interface IGenericRepository<T> where T : User
+    public interface IGenericRepository<T> where T : PaymentService
     {
         Task<IQueryable<T>> GetAll();
         Task<T?> Get(Expression<Func<T, bool>> expression, List<string>? includes = null);
