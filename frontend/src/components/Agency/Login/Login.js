@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../contexts/auth-context";
+import AuthContext from "../../../contexts/auth-context";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
