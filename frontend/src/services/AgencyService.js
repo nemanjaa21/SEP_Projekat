@@ -1,5 +1,9 @@
-import api from "../helpers/ConfigHelper";
+import { agencyApi } from "../helpers/ConfigHelper";
 
 export const getAllServiceOfferItem = async () => {
-  return await api.get(`/get-all-service-offer-item`);
+  return await agencyApi.get(`/ServiceOfferItem/get-all-service-offer-item`);
+};
+
+export const createServiceOffer = async (serviceOffer) => {
+  return await agencyApi.post(`/ServiceOffer/`, serviceOffer);
 };

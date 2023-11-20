@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
-import { Typography, Container, List, ListItem, Select, MenuItem, Button } from '@mui/material';
-import { getServiceOffer } from '../../../services/PSPService';
+import { Typography, Container, List, ListItem, Select, MenuItem, Button, TextField } from '@mui/material';
+import { qrCodePayment } from "../../../services/PSPService.js";
 
 const PSPDashboard = () => {
   const [serviceOffer, setServiceOffer] = useState(null); 
   const [selectedPayment, setSelectedPayment] = useState(''); 
 
-  useEffect(() => {
-    const id = localStorage.getItem("serviceOfferId");
-    const getServiceOffer = async () => {
-      try {
-        const data = await getServiceOffer(id);
-        setServiceOffer(data); 
-      } catch (error) {
-        console.error('Greška pri dohvatanju ServiceOfferItem-a:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const id = localStorage.getItem("serviceOfferId");
+  //   const getServiceOffer = async () => {
+  //     try {
+  //       const data = await getServiceOffer(id);
+  //       setServiceOffer(data); 
+  //     } catch (error) {
+  //       console.error('Greška pri dohvatanju ServiceOfferItem-a:', error);
+  //     }
+  //   };
 
-    getServiceOffer();
-  }, []);
+  //   getServiceOffer();
+  // }, []);
+
+  const getQrServicePayment = async () => {
+        try {
+          const response = await qrCodePayment();
+          console.log(response.data);
+        } catch (error) {
+          console.error('Greška pri dohvatanju ServiceOfferItem-a:', error);
+        }
+      };
 
   const handlePaymentChange = (event) => {
     setSelectedPayment(event.target.value); 
@@ -27,7 +36,7 @@ const PSPDashboard = () => {
   const handleRedirect = () => {
     switch (selectedPayment) {
       case 'Card':
-        window.location.href = 'link-to-credit-card-payment-page'; 
+        getQrServicePayment();
         break;
       case 'Paypal':
         window.location.href = 'link-to-paypal-payment-page'; 
@@ -48,7 +57,7 @@ const PSPDashboard = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Offer review
       </Typography>
-      <List>
+      {/* <List>
         {serviceOffer.ServiceOfferItems.map((offer) => (
           <ListItem key={offer.id}>
             {offer.OfferName} - Monthly Price: {offer.MonthlyPrice}, Yearly Price: {offer.YearlyPrice}
@@ -63,7 +72,7 @@ const PSPDashboard = () => {
         value={serviceOffer.TotalPrice}
         disabled
         fullWidth
-      />
+      /> */}
       <Typography variant="body1" align="center" gutterBottom>
         Choose payment method:
       </Typography>

@@ -11,6 +11,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IQRCodePaymentService, QRCodePaymentServiceImpl>();
 
+builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -22,6 +25,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseCors("CORSpolicy");
 
 app.MapControllers();
 

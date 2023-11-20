@@ -6,5 +6,6 @@ namespace AgencyService.DTO
     {
         public List<ServiceOfferItemDto>? ServiceOfferItems { get; set; }
         public int TotalPrice { get; set; }
+        public int Id { get; set; }
     }
 }

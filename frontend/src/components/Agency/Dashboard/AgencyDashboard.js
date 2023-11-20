@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { List, ListItem, ListItemText, Typography, Checkbox, Button, Container } from '@mui/material';
-import { getAllServiceOfferItem } from "../../../services/AgencyService";
+import { getAllServiceOfferItem, createServiceOffer } from "../../../services/AgencyService";
+import { useNavigate } from "react-router-dom";
 
 const AgencyDashboard = () => {
-  const [checkedItems, setCheckedItems] = useState([]);
+  const [checkedItems, setCheckedItems] = useState({});
   const [serviceOfferItems, setServiceOfferItems] = useState([]);
+  const navigate = useNavigate();
 
+  function checkOfferName(eOfferName) {
+    console.log(eOfferName);
+    if (eOfferName == 0) {
+      return "Prva opcija";
+    } else if (eOfferName == 1) {
+      return "Druga opcija";
+    } else if (eOfferName == 2) {
+      return "Treća opcija";
+    } else if (eOfferName == 3) {
+      return "Četvrta opcija";
+    } else {
+      return "Nepostojeća opcija";
+    }
+  }
+
+  
   useEffect(() => {
     const getAll = async () => {
       try {
-        const data = await getAllServiceOfferItem();
-        setServiceOfferItems(data); 
+        const response = await getAllServiceOfferItem();
+        setServiceOfferItems(response.data);
       } catch (error) {
         console.error('Greška pri dohvatanju ServiceOfferItem-a:', error);
       }
@@ -19,23 +37,28 @@ const AgencyDashboard = () => {
     getAll();
   }, []);
 
-  const handleSubmit = (id) => () => {
-    const currentIndex = checkedItems.indexOf(id);
-    const newChecked = [...checkedItems];
-
-    if (currentIndex === -1) {
-      newChecked.push(id);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setCheckedItems(newChecked);
+  const handleCheckedItems = (id, isChecked) => () => {
+    setCheckedItems((prevCheckedItems) => ({
+      ...prevCheckedItems,
+      [id]: isChecked,
+    }));
   };
 
-  const handleChooseItems = () => {
-    const selectedItems = serviceOfferItems.filter((item) => checkedItems.includes(item.id));
-    console.log('Izabrani ServiceOfferItem:', selectedItems);
-    // TODO Stavljanje na localStorage i slanje na bek
+  const handleSubmit = async () => {
+    try {
+      console.log("napravio", checkedItems);
+      const response = await createServiceOffer(checkedItems);
+      console.log("vratio", response.data);
+      localStorage.setItem("ServiceOfferItem", response.data.id);
+      navigate("/pspDashboard");
+
+    } catch (error) {
+      console.error('Greška pri dohvatanju ServiceOfferItem-a:', error);
+    }
+    //const selectedItems = serviceOfferItems.filter((item) => checkedItems[item.id] !== null);
+    //console.log('Izabrani ServiceOfferItem:', selectedItems);
+    // Implementirajte logiku za čuvanje izabranih stavki u localStorage
+    //localStorage.setItem("ServiceOfferItem", selectedItems);
   };
 
   return (
@@ -45,16 +68,29 @@ const AgencyDashboard = () => {
       </Typography>
       <List>
         {serviceOfferItems.map((offer) => (
-          <ListItem key={offer.id} button onClick={handleSubmit(offer.id)}>
+          <ListItem key={offer.id}>
             <ListItemText
-              primary={offer.OfferName}
-              secondary={`Monthly Price: ${offer.MonthlyPrice}, Yearly Price: ${offer.YearlyPrice}`}
+              primary={checkOfferName(offer.offerName)}
+              secondary={`Monthly Price: ${offer.monthlyPrice}, Yearly Price: ${offer.yearlyPrice}`}
             />
-            <Checkbox checked={checkedItems.indexOf(offer.id) !== -1} />
+            <div>
+              <Checkbox
+                checked={checkedItems[offer.id] === true}
+                onChange={() => handleCheckedItems(offer.id, true)()}
+              />
+              <label>Monthly Subscription</label>
+            </div>
+            <div>
+              <Checkbox
+                checked={checkedItems[offer.id] === false}
+                onChange={() => handleCheckedItems(offer.id, false)()}
+              />
+              <label>Yearly Subscription</label>
+            </div>
           </ListItem>
         ))}
       </List>
-      <Button variant="contained" onClick={handleChooseItems}>
+      <Button variant="contained" onClick={handleSubmit}>
         Submit
       </Button>
     </Container>

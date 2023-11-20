@@ -1,5 +1,5 @@
-import api from "../helpers/ConfigHelper";
+import { authApi } from "../helpers/ConfigHelper";
 
 export const login = async (logInData) => {
-  return await api.post(`/login`, logInData);
+  return await authApi.post(`/Auth/login`, logInData);
 };

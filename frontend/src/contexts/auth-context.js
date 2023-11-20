@@ -3,14 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../services/AuthService.js";
 import { jwtDecode } from "jwt-decode";
 
-const exceptionRead = (value) => value.split(":")[1].split("at")[0];
+//const exceptionRead = (value) => value.split(":")[1].split("at")[0];
 const AuthContext = React.createContext({
   isLoggedIn: false,
   token: "",
   role: "",
   onLogout: () => {},
   onLogin: (logInData) => {},
-  googleLogin: (loginData) => {},
 });
 
 const decodeToken = (token) => {
@@ -27,20 +26,17 @@ const decodeToken = (token) => {
 export const AuthContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState("");
-  const [role, setRole] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const loggedIn = sessionStorage.getItem("isLoggedIn");
     const currentToken = sessionStorage.getItem("token");
-    const currentRole = sessionStorage.getItem("role");
     
 
     if (loggedIn === "1") {
       setIsLoggedIn(true);
       setToken(currentToken);
-      setRole(currentRole);
       
     }
   }, []);
@@ -48,31 +44,18 @@ export const AuthContextProvider = (props) => {
   const logInHandler = async (logInData) => {
     try {
       const response = await login(logInData);
-      console.log(response);
-      // if (!response.ok) {
-      //     throw new Error("Invalid email or password!!!");
-      // }
-      console.log(response);
-
-      const decodedToken = decodeToken(response.data);
-      console.log("decoded token: ", decodeToken);
-      let verification = decodedToken.Verification;
-      let role =
-        decodedToken[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ];
+      // const decodedToken = decodeToken(response.data);
+      // console.log("decoded token: ", decodeToken);
 
       setIsLoggedIn(true);
-      setToken(response.data);
-      setRole(role);
+      setToken(response.data.token);
 
       sessionStorage.setItem("isLoggedIn", "1");
-      sessionStorage.setItem("token", response.data);
+      sessionStorage.setItem("token", response.data.token);
       
-      sessionStorage.setItem("role", role);
-      navigate("/dashboard");
+      navigate("/agencyDashboard");
     } catch (error) {
-      alert(exceptionRead(error.response.data));
+      alert(error);
     }
   };
 
@@ -80,7 +63,6 @@ export const AuthContextProvider = (props) => {
     setIsLoggedIn(false);
     sessionStorage.removeItem("isLoggedIn");
     sessionStorage.removeItem("token");
-    sessionStorage.removeItem("role");
     navigate("/");
   };
 
@@ -89,7 +71,6 @@ export const AuthContextProvider = (props) => {
       value={{
         isLoggedIn: isLoggedIn,
         token: token,
-        role: role,
         onLogout: logOutHandler,
         onLogin: logInHandler,
       }}

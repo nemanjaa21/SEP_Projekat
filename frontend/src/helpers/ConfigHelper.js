@@ -1,14 +1,59 @@
 import axios from "axios";
 
-const api = axios.create({ 
-    baseURL: process.env.REACT_APP_URL, 
-    headers: { 
-        'Content-Type': 'application/json', 
-    }, 
+const authApi = axios.create({
+    baseURL: "https://localhost:7051/api",
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+const agencyApi = axios.create({
+    baseURL: "https://localhost:7250/api",
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+const pspApi = axios.create({
+    baseURL: "https://localhost:7288/",
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+authApi.interceptors.request.use((config) => { 
+    try{ 
+        const token = sessionStorage.getItem('token');
+        if(token){ 
+            return {...config, headers: { 
+                ...config.headers, 
+                Authorization: `Bearer ${token}`, 
+            }};
+        } 
+        return config; 
+    } catch(e) { 
+        console.log(e); 
+        return Promise.reject(e); 
+    } 
+});
+
+agencyApi.interceptors.request.use((config) => { 
+    try{ 
+        const token = sessionStorage.getItem('token');
+        if(token){ 
+            return {...config, headers: { 
+                ...config.headers, 
+                Authorization: `Bearer ${token}`, 
+            }};
+        } 
+        return config; 
+    } catch(e) { 
+        console.log(e); 
+        return Promise.reject(e); 
+    } 
 }); 
 
-
-api.interceptors.request.use((config) => { 
+pspApi.interceptors.request.use((config) => { 
     try{ 
         const token = sessionStorage.getItem('token');
         if(token){ 
@@ -24,4 +69,4 @@ api.interceptors.request.use((config) => {
     } 
 }); 
  
-export default api;
+export { authApi, agencyApi, pspApi };

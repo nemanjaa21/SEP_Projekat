@@ -5,21 +5,19 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgencyService", "AgencyService\AgencyService.csproj", "{190DF288-934B-4E24-9B29-F61C4249A675}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\APIGateway.csproj", "{DD02B5F9-21AC-499F-9486-E3C838BA1B11}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService", "AuthService\AuthService.csproj", "{809B5EB8-1253-4428-9D11-A15FFD4B3D86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentServiceProvider", "PaymentServiceProvider\PaymentServiceProvider.csproj", "{A4BED1CE-F59F-477C-8255-97EAA69C96CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceProvider", "PaymentServiceProvider\PaymentServiceProvider.csproj", "{A4BED1CE-F59F-477C-8255-97EAA69C96CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardPaymentService", "CardPaymentService\CardPaymentService.csproj", "{897313DA-008D-4951-8B34-7485E31BCAF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardPaymentService", "CardPaymentService\CardPaymentService.csproj", "{897313DA-008D-4951-8B34-7485E31BCAF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitcoinPaymentService", "BitcoinPaymentService\BitcoinPaymentService.csproj", "{70675F5B-0A98-4B1B-A87E-017D7EE1F144}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitcoinPaymentService", "BitcoinPaymentService\BitcoinPaymentService.csproj", "{70675F5B-0A98-4B1B-A87E-017D7EE1F144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QRCodePaymentService", "QRCodePaymentService\QRCodePaymentService.csproj", "{0A7D55B3-7555-472A-96BC-8FCC12359A00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QRCodePaymentService", "QRCodePaymentService\QRCodePaymentService.csproj", "{0A7D55B3-7555-472A-96BC-8FCC12359A00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayPalPaymentService", "PayPalPaymentService\PayPalPaymentService.csproj", "{C088FDFD-1EBD-4947-B248-D1D4B15328F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PayPalPaymentService", "PayPalPaymentService\PayPalPaymentService.csproj", "{C088FDFD-1EBD-4947-B248-D1D4B15328F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSPGatewayAPI", "PSPGatewayAPI\PSPGatewayAPI.csproj", "{48601826-CE55-489A-B863-111B9661E122}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSPGatewayAPI", "PSPGatewayAPI\PSPGatewayAPI.csproj", "{48601826-CE55-489A-B863-111B9661E122}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +29,6 @@ Global
 		{190DF288-934B-4E24-9B29-F61C4249A675}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{190DF288-934B-4E24-9B29-F61C4249A675}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{190DF288-934B-4E24-9B29-F61C4249A675}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD02B5F9-21AC-499F-9486-E3C838BA1B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD02B5F9-21AC-499F-9486-E3C838BA1B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD02B5F9-21AC-499F-9486-E3C838BA1B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD02B5F9-21AC-499F-9486-E3C838BA1B11}.Release|Any CPU.Build.0 = Release|Any CPU
 		{809B5EB8-1253-4428-9D11-A15FFD4B3D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{809B5EB8-1253-4428-9D11-A15FFD4B3D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{809B5EB8-1253-4428-9D11-A15FFD4B3D86}.Release|Any CPU.ActiveCfg = Release|Any CPU

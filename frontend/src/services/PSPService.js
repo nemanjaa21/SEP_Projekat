@@ -1,5 +1,5 @@
-import api from "../helpers/ConfigHelper";
+import { pspApi } from "../helpers/ConfigHelper";
 
-export const getServiceOffer = async (id) => {
-  return await api.get(`/get-service-offer/` + id);
+export const qrCodePayment = async () => {
+  return await pspApi.get(`/qrcode-payment`);
 };
