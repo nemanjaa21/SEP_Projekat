@@ -1,34 +1,19 @@
-import React, { useRef, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
 import AuthContext from "../../../contexts/auth-context";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { toast } from "react-toastify";
-
-
-
 
 const isNotEmpty = (value) => value.trim() !== "";
-
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
-
 const Login = () => {
-
-
-  const navigate = useNavigate();
   const defaultTheme = createTheme();
 
   const [data, setData] = useState({
@@ -40,15 +25,8 @@ const Login = () => {
     password: true,
   });
 
-
-
   const authCtx = useContext(AuthContext);
-  const emailInputRef = useRef();
-  const passwordInputRef = useRef();
-
-
-
-
+  
   const emailBlurHandler = () => {
     const enteredEmail = data.Email;
     if (isNotEmpty(enteredEmail) && emailRegex.test(enteredEmail)) {
@@ -63,9 +41,6 @@ const Login = () => {
       }));
     }
   };
-
-
-
 
   const passwordBlurHandler = () => {
     const enteredPassword = data.Password;
@@ -82,16 +57,11 @@ const Login = () => {
     }
   };
 
-
-
-
   const submitHandler = (event) => {
     event.preventDefault();
 
     const loginData = { email: data.Email, password: data.Password };
-    authCtx.onLogin(loginData).then((response) => {
-      console.log(response);
-    });
+    authCtx.onLogin(loginData);
   };
 
   return (

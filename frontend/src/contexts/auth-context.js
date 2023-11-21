@@ -3,11 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../services/AuthService.js";
 import { jwtDecode } from "jwt-decode";
 
-//const exceptionRead = (value) => value.split(":")[1].split("at")[0];
 const AuthContext = React.createContext({
   isLoggedIn: false,
   token: "",
-  role: "",
   onLogout: () => {},
   onLogin: (logInData) => {},
 });
@@ -26,27 +24,22 @@ const decodeToken = (token) => {
 export const AuthContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState("");
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const loggedIn = sessionStorage.getItem("isLoggedIn");
     const currentToken = sessionStorage.getItem("token");
     
-
     if (loggedIn === "1") {
       setIsLoggedIn(true);
-      setToken(currentToken);
-      
+      setToken(currentToken);      
     }
   }, []);
 
   const logInHandler = async (logInData) => {
     try {
       const response = await login(logInData);
-      // const decodedToken = decodeToken(response.data);
-      // console.log("decoded token: ", decodeToken);
-
+      
       setIsLoggedIn(true);
       setToken(response.data.token);
 

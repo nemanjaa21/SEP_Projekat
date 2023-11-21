@@ -8,22 +8,6 @@ const AgencyDashboard = () => {
   const [serviceOfferItems, setServiceOfferItems] = useState([]);
   const navigate = useNavigate();
 
-  function checkOfferName(eOfferName) {
-    console.log(eOfferName);
-    if (eOfferName == 0) {
-      return "Prva opcija";
-    } else if (eOfferName == 1) {
-      return "Druga opcija";
-    } else if (eOfferName == 2) {
-      return "Treća opcija";
-    } else if (eOfferName == 3) {
-      return "Četvrta opcija";
-    } else {
-      return "Nepostojeća opcija";
-    }
-  }
-
-  
   useEffect(() => {
     const getAll = async () => {
       try {
@@ -36,6 +20,20 @@ const AgencyDashboard = () => {
 
     getAll();
   }, []);
+  
+  function checkOfferName(eOfferName) {
+    if (eOfferName === 0) {
+      return "Codification of laws";
+    } else if (eOfferName === 1) {
+      return "Publication of laws on internet";
+    } else if (eOfferName === 2) {
+      return "Issuance of laws printed form";
+    } else if (eOfferName === 3) {
+      return "Issuance of laws electronic form";
+    } else {
+      return "Unknown";
+    }
+  }
 
   const handleCheckedItems = (id, isChecked) => () => {
     setCheckedItems((prevCheckedItems) => ({
@@ -46,19 +44,13 @@ const AgencyDashboard = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log("napravio", checkedItems);
       const response = await createServiceOffer(checkedItems);
-      console.log("vratio", response.data);
-      localStorage.setItem("ServiceOfferItem", response.data.id);
+      localStorage.setItem("serviceOfferId", response.data.id);
       navigate("/pspDashboard");
 
     } catch (error) {
       console.error('Greška pri dohvatanju ServiceOfferItem-a:', error);
     }
-    //const selectedItems = serviceOfferItems.filter((item) => checkedItems[item.id] !== null);
-    //console.log('Izabrani ServiceOfferItem:', selectedItems);
-    // Implementirajte logiku za čuvanje izabranih stavki u localStorage
-    //localStorage.setItem("ServiceOfferItem", selectedItems);
   };
 
   return (
@@ -71,7 +63,7 @@ const AgencyDashboard = () => {
           <ListItem key={offer.id}>
             <ListItemText
               primary={checkOfferName(offer.offerName)}
-              secondary={`Monthly Price: ${offer.monthlyPrice}, Yearly Price: ${offer.yearlyPrice}`}
+              secondary={`Monthly Price: $${offer.monthlyPrice.toFixed(2)}, Yearly Price: $${offer.yearlyPrice.toFixed(2)}`}
             />
             <div>
               <Checkbox

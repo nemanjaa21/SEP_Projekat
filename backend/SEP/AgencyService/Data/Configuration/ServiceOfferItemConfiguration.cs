@@ -22,8 +22,32 @@ namespace AgencyService.Data.Configuration
                 Id = 1,
                 OfferName = EOfferName.CODIFICATION_OF_LAWS,
                 IsAccepted = false,
-                MonthlyPrice = 250,
-                YearlyPrice = 1250
+                MonthlyPrice = 24.99,
+                YearlyPrice = 149.99
+            },
+            new ServiceOfferItem()
+            {
+                Id = 2,
+                OfferName = EOfferName.ISSUANCE_OF_LAWS_ELECTRONIC_FORM,
+                IsAccepted = false,
+                MonthlyPrice = 11.99,
+                YearlyPrice = 99.99
+            },
+            new ServiceOfferItem()
+            {
+                Id = 3,
+                OfferName = EOfferName.ISSUANCE_OF_LAWS_PRINTED_FORM,
+                IsAccepted = false,
+                MonthlyPrice = 31.99,
+                YearlyPrice = 240.00
+            }
+            , new ServiceOfferItem()
+            {
+                Id = 4,
+                OfferName = EOfferName.PUBLICATION_OF_LAWS_ON_INTERNET,
+                IsAccepted = false,
+                MonthlyPrice = 6.99,
+                YearlyPrice = 39.99
             });
         }
     }

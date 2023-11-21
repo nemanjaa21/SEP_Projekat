@@ -26,7 +26,7 @@ namespace AgencyService.Service
         public async Task<ServiceOffer> CreateServiceOffer(Dictionary<int, bool> ids)
         {
             List<ServiceOfferItem> offerItems = new List<ServiceOfferItem>();
-            int totalPrice = 0;
+            double totalPrice = 0;
 
             foreach (var kvp in ids)
             {
