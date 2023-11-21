@@ -1,21 +1,21 @@
 import axios from "axios";
 
 const authApi = axios.create({
-    baseURL: "https://localhost:7051/api",
+    baseURL: process.env.REACT_APP_AUTH_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 const agencyApi = axios.create({
-    baseURL: "https://localhost:7250/api",
+    baseURL: process.env.REACT_APP_AGENCY_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 const pspApi = axios.create({
-    baseURL: "https://localhost:7288/",
+    baseURL: process.env.REACT_APP_PSP_URL,
     headers: {
         'Content-Type': 'application/json',
     },

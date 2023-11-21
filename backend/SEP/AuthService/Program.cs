@@ -53,7 +53,6 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -64,9 +63,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("CORSpolicy");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("CORSpolicy");
 
 app.MapControllers();
 

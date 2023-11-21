@@ -15,3 +15,5 @@ export const qrCodePayment = async () => {
 export const payPalPayment = async () => {
   return await pspApi.get(`/paypal-payment`);
 };
+
+//POTREBNO OMOGUCITI AGENCIJAMA DA SE DODATNO PRIJAVLJUJU ILI SKIDAJU PAYMENTE U PSP-u

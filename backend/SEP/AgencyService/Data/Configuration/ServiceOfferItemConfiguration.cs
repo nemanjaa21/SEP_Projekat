@@ -15,6 +15,7 @@ namespace AgencyService.Data.Configuration
             builder.Property(x => x.IsAccepted);
             builder.Property(x=> x.MonthlyPrice).IsRequired();
             builder.Property(x=> x.YearlyPrice).IsRequired();
+            builder.Property(x => x.SelectedPrice);
             builder.HasMany(x => x.ServiceOffers).WithMany(x => x.ServiceOfferItems);
 
             builder.HasData(new ServiceOfferItem()

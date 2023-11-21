@@ -38,7 +38,7 @@ const PSPDashboard = () => {
   const getCardPayment = async () => {
     try {
       const response = await creditCardPayment();
-      console.log(response.data);
+      return response.data;
     } catch (error) {
       console.error("Greška pri placanju karticom:", error);
     }
@@ -47,7 +47,7 @@ const PSPDashboard = () => {
   const getBitcoinPayment = async () => {
     try {
       const response = await bitcoinPayment();
-      console.log(response.data);
+      return response.data;
     } catch (error) {
       console.error("Greška pri bitcoin placanju:", error);
     }
@@ -56,7 +56,7 @@ const PSPDashboard = () => {
   const getQrServicePayment = async () => {
     try {
       const response = await qrCodePayment();
-      console.log(response.data);
+      return response.data;
     } catch (error) {
       console.error("Greška pri QR placanju:", error);
     }
@@ -65,7 +65,7 @@ const PSPDashboard = () => {
   const getPayPalServicePayment = async () => {
     try {
       const response = await payPalPayment();
-      console.log(response.data);
+      return response.data;
     } catch (error) {
       console.error("Greška pri PayPal placanju:", error);
     }
@@ -75,23 +75,26 @@ const PSPDashboard = () => {
     setSelectedPayment(event.target.value);
   };
 
-  const handleRedirect = () => {
+  const handleRedirect = async () => {
+    let paymentResult = '';
     switch (selectedPayment) {
       case "Card":
-        getCardPayment();
+        paymentResult = await getCardPayment();
         break;
       case "Bitcoin":
-        getBitcoinPayment();
+        paymentResult = await getBitcoinPayment();
         break;
       case "QR Code":
-        getQrServicePayment();
+        paymentResult = await getQrServicePayment();
         break;
       case "Paypal":
-        getPayPalServicePayment();
+        paymentResult = await getPayPalServicePayment();
         break;
       default:
         break;
     }
+
+    console.log(paymentResult);
   };
 
   function checkOfferName(eOfferName) {
@@ -118,8 +121,7 @@ const PSPDashboard = () => {
           <List>
             {serviceOffer.serviceOfferItems.map((offer) => (
               <ListItem key={offer.id}>
-                {checkOfferName(offer.offerName)} - Monthly Price: ${offer.monthlyPrice}, Yearly
-                Price: ${offer.yearlyPrice}
+                {checkOfferName(offer.offerName)} - Price ${offer.selectedPrice.toFixed(2)}
               </ListItem>
             ))}
           </List>

@@ -36,9 +36,10 @@ namespace AgencyService.Service
                 var item = await _unitOfWork.ServiceOfferItemRepository.Get(x => x.Id == id);
                 if (item != null)
                 {
-                    offerItems.Add(item);
-
+                    item.SelectedPrice = isMonthly ? item.MonthlyPrice : item.YearlyPrice;
                     totalPrice += isMonthly ? item.MonthlyPrice : item.YearlyPrice;
+
+                    offerItems.Add(item);
                 }
             }
 
