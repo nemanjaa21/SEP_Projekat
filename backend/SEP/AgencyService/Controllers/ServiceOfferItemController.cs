@@ -35,7 +35,9 @@ namespace AgencyService.Controllers
             {
                 return NotFound($"Item with id {id} does not exist!");
             }
-            return Ok(item);
+            ServiceOfferItemDto serviceOfferItemDto = new ServiceOfferItemDto();
+            serviceOfferItemDto = _mapper.Map<ServiceOfferItemDto>(item);
+            return Ok(serviceOfferItemDto);
         }
     }
 }
