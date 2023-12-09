@@ -27,6 +27,5 @@ namespace PaymentServiceProvider.Controllers
             paymentServiceDto = _mapper.Map<List<PaymentServiceDto>>(paymentMethods);
             return Ok(paymentMethods);
         }
-
     }
 }
