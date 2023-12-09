@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthService.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20231118191109_UserMigration")]
+    [Migration("20231209174143_UserMigration")]
     partial class UserMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,9 @@ namespace AuthService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -51,19 +54,22 @@ namespace AuthService.Migrations
                         {
                             Id = 1,
                             Email = "zdravko@gmail.com",
-                            Password = "$2a$11$2MFjwguj8fLG2Dw3v5HmM.r05oSzQYgMJw1BcSTysMiAQKgn6kVL6"
+                            Password = "$2a$11$LJD2FpYMIxY8G/WrKvUobeR0yLVktJzaB93JaO3NA/5vxN36BefHC",
+                            Type = 0
                         },
                         new
                         {
                             Id = 2,
                             Email = "kurda@gmail.com",
-                            Password = "$2a$11$eRu4eKxGHCb9u6j9Z7Uf8uPx5/mHOtLq2GqocM9BCOXeO8RABOfUq"
+                            Password = "$2a$11$.iaAO0HD4UUKWo5dYKzCgeGSG4pCrnhBdhzC7caQVdSxS7eGIvVnm",
+                            Type = 2
                         },
                         new
                         {
                             Id = 3,
                             Email = "malina@gmail.com",
-                            Password = "$2a$11$UE5tVYhZwEvwCRmcUjJNq.faVqhhACavdts5lONtHgHAQgrGLcFU6"
+                            Password = "$2a$11$DngOWHvIh42rjiVEw8M5v.94Z9gWm76FgKEghb1bxkIGerRufE3L.",
+                            Type = 6
                         });
                 });
 #pragma warning restore 612, 618

@@ -15,7 +15,8 @@ namespace AuthService.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,18 +25,18 @@ namespace AuthService.Migrations
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "Email", "Password" },
-                values: new object[] { 1, "zdravko@gmail.com", "$2a$11$2MFjwguj8fLG2Dw3v5HmM.r05oSzQYgMJw1BcSTysMiAQKgn6kVL6" });
+                columns: new[] { "Id", "Email", "Password", "Type" },
+                values: new object[] { 1, "zdravko@gmail.com", "$2a$11$LJD2FpYMIxY8G/WrKvUobeR0yLVktJzaB93JaO3NA/5vxN36BefHC", 0 });
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "Email", "Password" },
-                values: new object[] { 2, "kurda@gmail.com", "$2a$11$eRu4eKxGHCb9u6j9Z7Uf8uPx5/mHOtLq2GqocM9BCOXeO8RABOfUq" });
+                columns: new[] { "Id", "Email", "Password", "Type" },
+                values: new object[] { 2, "kurda@gmail.com", "$2a$11$.iaAO0HD4UUKWo5dYKzCgeGSG4pCrnhBdhzC7caQVdSxS7eGIvVnm", 2 });
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "Email", "Password" },
-                values: new object[] { 3, "malina@gmail.com", "$2a$11$UE5tVYhZwEvwCRmcUjJNq.faVqhhACavdts5lONtHgHAQgrGLcFU6" });
+                columns: new[] { "Id", "Email", "Password", "Type" },
+                values: new object[] { 3, "malina@gmail.com", "$2a$11$DngOWHvIh42rjiVEw8M5v.94Z9gWm76FgKEghb1bxkIGerRufE3L.", 6 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AuthService.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace AuthService.Models
 {
@@ -10,5 +11,6 @@ namespace AuthService.Models
         public string Email { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!;
+        public EUserType Type { get; set; }
     }
 }
