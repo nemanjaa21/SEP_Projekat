@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace PaymentServiceProvider.Interfaces
 {
-    public interface IGenericRepository<T> where T : PaymentService
+    public interface IGenericRepository<T> where T : EntityBase
     {
         Task<IQueryable<T>> GetAll();
         Task<T?> Get(Expression<Func<T, bool>> expression, List<string>? includes = null);

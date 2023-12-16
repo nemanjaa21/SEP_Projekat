@@ -1,9 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PaymentServiceProvider.Data;
 using PaymentServiceProvider.Interfaces;
+using PaymentServiceProvider.Mapping;
 using PaymentServiceProvider.Repository;
 using PaymentServiceProvider.Services;
 using System.Text;
@@ -16,6 +18,7 @@ builder.Services.AddScoped<DbContext, PaymentServiceDbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPaymentService, PaymentServiceImpl>();
+builder.Services.AddScoped<IMerchantService, MerchantServiceImpl>();
 
 builder.Services.AddSwaggerGen();
 
@@ -50,6 +53,12 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
 
 var app = builder.Build();
 

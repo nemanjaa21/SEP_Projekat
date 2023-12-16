@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace PaymentServiceProvider.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : PaymentService
+    public class GenericRepository<T> : IGenericRepository<T> where T : EntityBase
     {
         private readonly DbContext _dbContext;
         private DbSet<T> entities;

@@ -1,6 +1,4 @@
-﻿using BankService.Models;
-
-namespace BankService.Interfaces
+﻿namespace BankService.Interfaces
 {
     public interface IAccountService
     {

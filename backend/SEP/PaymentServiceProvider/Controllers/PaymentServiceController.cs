@@ -22,10 +22,10 @@ namespace PaymentServiceProvider.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPaymentMethods()
         {
+            List<PaymentServiceDTO> paymentServiceDto = new List<PaymentServiceDTO>();
             var paymentMethods = await _paymentService.GetAllPaymentMethods();
-            List<PaymentServiceDto> paymentServiceDto = new List<PaymentServiceDto>();
-            paymentServiceDto = _mapper.Map<List<PaymentServiceDto>>(paymentMethods);
-            return Ok(paymentMethods);
+            paymentServiceDto = _mapper.Map<List<PaymentServiceDTO>>(paymentMethods);
+            return Ok(paymentServiceDto);
         }
     }
 }

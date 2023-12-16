@@ -2,9 +2,9 @@
 
 namespace PaymentServiceProvider.Models
 {
-    public class PaymentService : EntityBase
+    public class EntityBase
     {
         [Required]
-        public string? Name { get; set; }
+        public int Id { get; set; }
     }
 }

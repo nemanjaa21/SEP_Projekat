@@ -1,5 +1,7 @@
+using AutoMapper;
 using BankService.Data;
 using BankService.Interfaces;
+using BankService.Mapping;
 using BankService.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +34,14 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+
 app.UseCors("CORSpolicy");
 
 app.MapControllers();

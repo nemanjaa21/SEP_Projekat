@@ -8,11 +8,13 @@ namespace PaymentServiceProvider.Repository
     {
         public readonly DbContext _dbContext;
         public IGenericRepository<PaymentService> PaymentServiceRepository { get; }
+        public IGenericRepository<Merchant> MerchantRepository { get; }
 
-        public UnitOfWork(DbContext dbContext,IGenericRepository<PaymentService> paymentServiceRepository)
+        public UnitOfWork(DbContext dbContext, IGenericRepository<PaymentService> paymentServiceRepository, IGenericRepository<Merchant> merchantRepository)
         {
             _dbContext = dbContext;
             PaymentServiceRepository = paymentServiceRepository;
+            MerchantRepository = merchantRepository;
         }
 
         public void Dispose()
