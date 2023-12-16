@@ -37,8 +37,9 @@ namespace PaymentServiceProvider.Services
                 Random random = new Random();
                 Merchant? merchant = await _merchantService.GetMercantByApiKey(apiKey);
                 PaymentService? paymentType = await GetPaymentService(pspRequest.PaymentTypeId);
+                long merchantOrderId = (long)(random.NextDouble() * 1000000);
 
-                PaymentRequest paymentRequest = new PaymentRequest(merchant.MerchantId, merchant.MerchantPassword, pspRequest.Amount, random.NextInt64(), DateTime.Now, "SUCCESS_URL", "FAIL_URL", "ERROR_URL");              
+                PaymentRequest paymentRequest = new PaymentRequest(merchant.MerchantId, merchant.MerchantPassword, pspRequest.Amount, merchantOrderId, DateTime.Now, "SUCCESS_URL", "FAIL_URL", "ERROR_URL");              
 
                 //OVE URLOVE TREBA POVUCI IZ CONFIG-A VRV, I OVDE SE NEKIM BROOKEROM SALJE NA MIKROSERVISE.
                 //PaymentResponse = brooker.sendRequest(paymentType, paymentRequest)

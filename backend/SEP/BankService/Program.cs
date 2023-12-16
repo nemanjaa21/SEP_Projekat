@@ -3,6 +3,7 @@ using BankService.Data;
 using BankService.Interfaces;
 using BankService.Mapping;
 using BankService.Repository;
+using BankService.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,12 @@ builder.Services.AddDbContext<BankDbContext>(opt => opt.UseSqlServer(builder.Con
 builder.Services.AddScoped<DbContext, BankDbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IBanksService, BanksService>();
+builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<IMerchantService, MerchantService>();
+builder.Services.AddScoped<IPSPService, PSPService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 var mapperConfig = new MapperConfiguration(mc =>
