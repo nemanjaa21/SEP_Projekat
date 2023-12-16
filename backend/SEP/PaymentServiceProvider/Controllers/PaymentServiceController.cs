@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PaymentServiceProvider.Dto;
 using PaymentServiceProvider.Interfaces;
+using PaymentServiceProvider.Models;
+using shared;
 
 namespace PaymentServiceProvider.Controllers
 {
@@ -26,6 +28,14 @@ namespace PaymentServiceProvider.Controllers
             var paymentMethods = await _paymentService.GetAllPaymentMethods();
             paymentServiceDto = _mapper.Map<List<PaymentServiceDTO>>(paymentMethods);
             return Ok(paymentServiceDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProcessPayment(PSPRequest pspRequest, string apiKey)
+        {
+            PaymentResponse paymentResponse = await _paymentService.ProcessPayment(pspRequest, apiKey);
+
+            return Ok(paymentResponse);
         }
     }
 }
