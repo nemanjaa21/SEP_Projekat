@@ -10,7 +10,7 @@ namespace BankService.Data.Configuration
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.PAN).IsRequired();
+            builder.Property(x => x.Pan).IsRequired();
             builder.Property(x => x.SecurityCode).IsRequired();
             builder.Property(x => x.CardHolderName).IsRequired();
             builder.Property(x => x.ExpirationDate).IsRequired();

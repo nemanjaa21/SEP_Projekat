@@ -2,7 +2,7 @@
 {
     public class Card : EntityBase
     {
-        public string? PAN { get; set; }
+        public string? Pan { get; set; }
         public string? SecurityCode { get; set; }
         public string? CardHolderName { get; set; }
         public string? ExpirationDate { get; set; }

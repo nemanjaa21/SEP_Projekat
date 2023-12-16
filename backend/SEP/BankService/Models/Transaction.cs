@@ -4,8 +4,8 @@ namespace BankService.Models
 {
     public class Transaction : EntityBase
     {
-        public double Amount { get; set; }
-        public string? MerchantOrderId { get; set; }
+        public decimal Amount { get; set; }
+        public long MerchantOrderId { get; set; }
         public DateTime MerchantTimestamp { get; set; }
         public long AcquirerOrderId { get; set; }
         public DateTime AcquirerTimestamp { get; set; }

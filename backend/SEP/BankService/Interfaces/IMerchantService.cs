@@ -4,6 +4,6 @@ namespace BankService.Interfaces
 {
     public interface IMerchantService
     {
-        public Task<Merchant> GetById(int id);
+        public Task<Merchant> GetByMerchantId(string id);
     }
 }
