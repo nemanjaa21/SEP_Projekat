@@ -1,4 +1,6 @@
-﻿using BankService.Interfaces;
+﻿using BankService.DTO;
+using BankService.Enums;
+using BankService.Interfaces;
 using BankService.Models;
 using shared;
 
@@ -53,6 +55,16 @@ namespace BankService.Services
             {
                 return new PaymentResponse(null, failUrl);
             }
+        }
+
+        public PSPResponseDTO GenerateResponseBasedOnURL(Url url)
+        {
+            if (url == Url.SUCCESSFUL)
+                return new PSPResponseDTO() { Url = successUrl};
+            else if (url == Url.FAILED)
+                return new PSPResponseDTO() { Url = failUrl };
+            else
+                return new PSPResponseDTO() { Url = errorUrl };
         }
     }
 }

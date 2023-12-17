@@ -7,8 +7,8 @@ namespace BankService.Interfaces
     {
         bool IsSameBank(string pan);
         Task<PCCResponseDTO> SendToPCC(CardInfoDTO cardInfoDTO, Transaction transaction);
-        Task<PCCResponseDTO> ResendToPCC(PCCRequestDTO pccRequestDTO, string accountNumber, long userId);
-        Task<PSPResponseDTO> SendToPSP(CardInfoDTO cardInfoDTO, long issuerId, Transaction transaction);
+        Task<PCCResponseDTO> ResendToPCC(PCCRequestDTO pccRequestDTO, string issuerAccountNumber, int userId);
+        Task<PSPResponseDTO> SendToPSP(CardInfoDTO cardInfoDTO, int issuerId, Transaction transaction);
         Task<PSPResponseDTO> SendToPSPFromPCC(PCCResponseDTO pccResponseDTO);
     }
 }

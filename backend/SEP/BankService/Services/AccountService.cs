@@ -29,7 +29,7 @@ namespace BankService.Services
             return account?.AccountNumber ?? string.Empty;
         }
 
-        public async Task<bool> DepositMoney(int merchantId, double amount)
+        public async Task<bool> DepositMoney(int merchantId, decimal amount)
         {
             var accountReceiver = await _unitOfWork.AccountsRepository.Get(account => account.MerchantId == merchantId);
             if (accountReceiver != null && accountReceiver.Balance >= amount)
@@ -42,7 +42,7 @@ namespace BankService.Services
             return false;
         }
 
-        public async Task<bool> WithdrawMoney(int userId, double amount)
+        public async Task<bool> WithdrawMoney(int userId, decimal amount)
         {
             var accountBuyer = await _unitOfWork.AccountsRepository.Get(account => account.UserId == userId);
             if (accountBuyer != null && accountBuyer.Balance >= amount)

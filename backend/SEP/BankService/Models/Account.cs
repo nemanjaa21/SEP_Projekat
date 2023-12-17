@@ -3,8 +3,8 @@
     public class Account : EntityBase
     {
         public string? AccountNumber { get; set; }
-        public double Balance { get; set; }
-        public double Reserved { get; set; }
+        public decimal Balance { get; set; }
+        public decimal Reserved { get; set; }
         public string? Merchant_Id { get; set; }
         public int UserId { get; set; }
         public User? User { get; set; }

@@ -1,4 +1,5 @@
-﻿using BankService.Interfaces;
+﻿using BankService.DTO;
+using BankService.Interfaces;
 using BankService.Models;
 
 namespace BankService.Services
@@ -12,9 +13,9 @@ namespace BankService.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Card> CheckCardInfo(Card card)
+        public async Task<Card> CheckCardInfo(CardInfoDTO card)
         {
-            var verifiedCard = await _unitOfWork.CardsRepository.Get(c => c.Pan == card.Pan && c.CardHolderName == card.CardHolderName && c.SecurityCode == card.SecurityCode && c.ExpirationDate == card.ExpirationDate);
+            var verifiedCard = await _unitOfWork.CardsRepository.Get(c => c.Pan == card.Pan && c.CardHolderName == card.CardHolderName && c.SecurityCode == card.SecurityCode && c.ExpirationDate == card.ExpirationDate, new List<string>() { "Account" });
             if (verifiedCard == null)
                 throw new Exception("No card with given data was found.");
 

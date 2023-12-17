@@ -1,7 +1,10 @@
 ﻿using BankService.DTO;
+using BankService.Enums;
 using BankService.Interfaces;
 using BankService.Models;
+using Newtonsoft.Json;
 using System;
+using System.Text;
 
 namespace BankService.Services
 {
@@ -14,6 +17,7 @@ namespace BankService.Services
         private readonly IConfiguration _configuration;
         private string successUrl;
         private string bankId;
+        HttpClient _httpClient;
 
         public BanksService(IUnitOfWork unitOfWork, ICardService cardService, IAccountService accountService, ITransactionService transaction, IConfiguration configuration)
         {
@@ -25,6 +29,7 @@ namespace BankService.Services
 
             successUrl = _configuration["URLS:SUCCESS_URL"];
             bankId = _configuration["BANK:ID"];
+            _httpClient = new HttpClient();
         }
 
         public bool IsSameBank(string pan)
@@ -34,37 +39,97 @@ namespace BankService.Services
         public async Task<PCCResponseDTO> SendToPCC(CardInfoDTO cardInfoDTO, Transaction transaction)
         {
             Random random = new Random();
-            string accountNumber = await _accountService.GetAccountNumberByMerchant(transaction.IdMerchant);
-            long aciquiererOrderId = (long)(random.NextDouble() * 1000000);
-            DateTime aciquiererTimeStamp = DateTime.Now;
-            PCCRequestDTO pccRequestDTO = new PCCRequestDTO(cardInfoDTO.Pan, cardInfoDTO.SecurityCode, cardInfoDTO.CardHolderName, cardInfoDTO.ExpirationDate, transaction.Amount,
-                aciquiererOrderId, aciquiererTimeStamp, bankId, transaction.MerchantOrderId, transaction.MerchantTimestamp, transaction.PaymentId, accountNumber);
+            string acquirerAccountNumber = await _accountService.GetAccountNumberByMerchant(transaction.IdMerchant);
+            long acquirerOrderId = (long)(random.NextDouble() * 1000000);
+            DateTime acquirerTimeStamp = DateTime.Now;
 
-            transaction.AcquirerOrderId = aciquiererOrderId;
-            transaction.AcquirerTimestamp = aciquiererTimeStamp;
-            transaction.AcquirerAccountNumber = accountNumber;
+            PCCRequestDTO pccRequestDTO = new PCCRequestDTO(cardInfoDTO.Pan, cardInfoDTO.SecurityCode, cardInfoDTO.CardHolderName, cardInfoDTO.ExpirationDate, transaction.Amount,
+                acquirerOrderId, acquirerTimeStamp, bankId, transaction.MerchantOrderId, transaction.MerchantTimestamp, transaction.PaymentId, acquirerAccountNumber);
+
+            transaction.AcquirerOrderId = acquirerOrderId;
+            transaction.AcquirerTimestamp = acquirerTimeStamp;
+            transaction.AcquirerAccountNumber = acquirerAccountNumber;
 
             _unitOfWork.TransactionsRepository.Update(transaction);
             await _unitOfWork.Save();
 
             //SEND TO PCC AND RETRIEVE BACK.
+            try
+            {
+                string jsonRequest = JsonConvert.SerializeObject(pccRequestDTO);
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _httpClient.PostAsync("http://localhost:7241/api/PCC/ToIssuerBank", content);
 
-            return null;
+                string responseBody = await response.Content.ReadAsStringAsync();
+                PCCResponseDTO? pccResponseDTO = JsonConvert.DeserializeObject<PCCResponseDTO>(responseBody);
+                return pccResponseDTO!;
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine("PCC Request Exception: " + ex.Message);
+                return null!;
+            }
         }
 
-        public Task<PCCResponseDTO> ResendToPCC(PCCRequestDTO pccRequestDTO, string accountNumber, long userId)
+        public async Task<PCCResponseDTO> ResendToPCC(PCCRequestDTO pccRequestDTO, string issuerAccountNumber, int userId)
         {
-            throw new NotImplementedException();
+            Random random = new Random();
+            long issuerOrderId = (long)(random.NextDouble() * 1000000);
+            DateTime issuerTimeStamp = DateTime.Now;
+
+            PCCResponseDTO pccResponse = new PCCResponseDTO(pccRequestDTO.Pan, pccRequestDTO.SecurityCode, pccRequestDTO.CardHolderName, pccRequestDTO.CardHolderName, pccRequestDTO.Amount, pccRequestDTO.AcquirerOrderId, pccRequestDTO.AcquirerTimestamp,
+                issuerOrderId, issuerTimeStamp, bankId, pccRequestDTO.MerchantOrderId, pccRequestDTO.MerchantTimestamp, pccRequestDTO.PaymentId, pccRequestDTO.AcquirerAccountNumber, issuerAccountNumber);
+
+            Transaction transaction = await _transactionService.GetByPaymentId(pccRequestDTO.PaymentId!);
+
+            transaction.IdUser = userId;
+            transaction.IssuerOrderId = issuerOrderId;
+            transaction.IssuerTimestamp = issuerTimeStamp;
+            transaction.IssuerAccountNumber = issuerAccountNumber;
+
+            _unitOfWork.TransactionsRepository.Update(transaction);
+            await _unitOfWork.Save();
+
+            return pccResponse;
         }
 
-        public Task<PSPResponseDTO> SendToPSP(CardInfoDTO cardInfoDTO, long issuerId, Transaction transaction)
+        public async Task<PSPResponseDTO> SendToPSP(CardInfoDTO cardInfoDTO, int issuerId, Transaction transaction)
         {
-            throw new NotImplementedException();
+            Random random = new Random();
+            string issuerAccountNumber = await _accountService.GetAccountNumberByUser(issuerId);
+            string acquirerAccountNumber = await _accountService.GetAccountNumberByMerchant(transaction.IdMerchant);
+            long acquirerOrderId = (long)(random.NextDouble() * 1000000);
+            DateTime acquirerTimeStamp = DateTime.Now;
+
+            PSPResponseDTO pspResponse = new PSPResponseDTO(successUrl, acquirerOrderId, acquirerTimeStamp, transaction.MerchantOrderId, transaction.PaymentId);
+
+            transaction.AcquirerOrderId = acquirerOrderId;
+            transaction.AcquirerTimestamp = acquirerTimeStamp;
+            transaction.AcquirerAccountNumber = acquirerAccountNumber;
+            transaction.IdUser = issuerId;
+            transaction.IssuerAccountNumber = issuerAccountNumber;
+            transaction.Status = Status.SUCCESSFUL;
+
+            _unitOfWork.TransactionsRepository.Update(transaction);
+            await _unitOfWork.Save();
+
+            return pspResponse;
         }
 
-        public Task<PSPResponseDTO> SendToPSPFromPCC(PCCResponseDTO pccResponseDTO)
+        public async Task<PSPResponseDTO> SendToPSPFromPCC(PCCResponseDTO pccResponseDTO)
         {
-            throw new NotImplementedException();
+            PSPResponseDTO pspResponse = new PSPResponseDTO(successUrl, pccResponseDTO.AcquirerOrderId, pccResponseDTO.AcquirerTimestamp, pccResponseDTO.MerchantOrderId, pccResponseDTO.PaymentId);
+
+            Transaction transaction = await _transactionService.GetByPaymentId(pccResponseDTO.PaymentId!);
+            transaction.IssuerOrderId = pccResponseDTO.IssuerOrderId;
+            transaction.IssuerTimestamp = pccResponseDTO.IssuerTimestamp;
+            transaction.IssuerAccountNumber = pccResponseDTO.IssuerAccountNumber;
+            transaction.Status = Status.SUCCESSFUL;
+
+            _unitOfWork.TransactionsRepository.Update(transaction);
+            await _unitOfWork.Save();
+
+            return pspResponse;
         }
     }
 }

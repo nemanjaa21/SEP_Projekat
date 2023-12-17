@@ -1,7 +1,6 @@
 using AutoMapper;
 using BankService.Data;
 using BankService.Interfaces;
-using BankService.Mapping;
 using BankService.Repository;
 using BankService.Services;
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +27,6 @@ builder.Services.AddScoped<IPSPService, PSPService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-var mapperConfig = new MapperConfiguration(mc =>
-{
-    mc.AddProfile(new MappingProfile());
-});
-IMapper mapper = mapperConfig.CreateMapper();
-builder.Services.AddSingleton(mapper);
-
 
 var app = builder.Build();
 
