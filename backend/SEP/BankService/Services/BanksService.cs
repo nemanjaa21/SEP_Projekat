@@ -11,7 +11,6 @@ namespace BankService.Services
     public class BanksService : IBanksService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICardService _cardService;
         private readonly IAccountService _accountService;
         private readonly ITransactionService _transactionService;
         private readonly IConfiguration _configuration;
@@ -19,10 +18,9 @@ namespace BankService.Services
         private string bankId;
         HttpClient _httpClient;
 
-        public BanksService(IUnitOfWork unitOfWork, ICardService cardService, IAccountService accountService, ITransactionService transaction, IConfiguration configuration)
+        public BanksService(IUnitOfWork unitOfWork, IAccountService accountService, ITransactionService transaction, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
-            _cardService = cardService;
             _accountService = accountService;
             _transactionService = transaction;
             _configuration = configuration;
@@ -58,7 +56,7 @@ namespace BankService.Services
             {
                 string jsonRequest = JsonConvert.SerializeObject(pccRequestDTO);
                 var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await _httpClient.PostAsync("http://localhost:7241/api/PCC/ToIssuerBank", content);
+                HttpResponseMessage response = await _httpClient.PostAsync("http://localhost:7241/api/PCC/forward-to-issuer-bank", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
                 PCCResponseDTO? pccResponseDTO = JsonConvert.DeserializeObject<PCCResponseDTO>(responseBody);
@@ -93,6 +91,7 @@ namespace BankService.Services
             return pccResponse;
         }
 
+        //Ne salje PSP-u samo updatuje transakciju
         public async Task<PSPResponseDTO> SendToPSP(CardInfoDTO cardInfoDTO, int issuerId, Transaction transaction)
         {
             Random random = new Random();
@@ -116,6 +115,7 @@ namespace BankService.Services
             return pspResponse;
         }
 
+        //Takodje ne salje PSP-u samo updatuje transakciju
         public async Task<PSPResponseDTO> SendToPSPFromPCC(PCCResponseDTO pccResponseDTO)
         {
             PSPResponseDTO pspResponse = new PSPResponseDTO(successUrl, pccResponseDTO.AcquirerOrderId, pccResponseDTO.AcquirerTimestamp, pccResponseDTO.MerchantOrderId, pccResponseDTO.PaymentId);

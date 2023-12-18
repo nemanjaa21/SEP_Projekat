@@ -75,5 +75,31 @@ namespace BankService.Controllers
                 return BadRequest(responseDTO);
             }
         }
+
+        [HttpPost("withdraw-money")]
+        public async Task<IActionResult> WithdrawMoneyFromIssuer([FromBody]PCCRequestDTO pccRequestDTO)
+        {
+            CardInfoDTO cardInfo = new CardInfoDTO()
+            {
+                Pan = pccRequestDTO.Pan,
+                CardHolderName = pccRequestDTO.CardHolderName,
+                PaymentId = pccRequestDTO.PaymentId,
+                ExpirationDate = pccRequestDTO.ExpirationDate,
+                SecurityCode = pccRequestDTO.SecurityCode,
+            };
+            PCCResponseDTO responseDTO = new PCCResponseDTO();
+
+            if (_banksService.IsSameBank(pccRequestDTO.Pan!))
+            {                
+                Card? card = await _cardService.CheckCardInfo(cardInfo);
+                if (await _accountService.WithdrawMoney(card.Account!.UserId, pccRequestDTO.Amount))
+                {
+                    responseDTO = await _banksService.ResendToPCC(pccRequestDTO, card.Account!.AccountNumber!, card.Account!.UserId);
+                    return Ok(responseDTO);
+                }
+            }
+
+            return BadRequest(responseDTO);
+        }
     }
 }

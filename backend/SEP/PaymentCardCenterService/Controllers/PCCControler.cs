@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PaymentCardCenterService.DTO;
+using PaymentCardCenterService.Interfaces;
 
 namespace PaymentCardCenterService.Controllers
 {
@@ -7,10 +9,24 @@ namespace PaymentCardCenterService.Controllers
     [ApiController]
     public class PCCControler : ControllerBase
     {
-        [HttpPost]
-        async Task <IActionResult> ToIssuerBank()
+        private readonly IPCCService _pccService;
+        public PCCControler(IPCCService pccService)
         {
-            return Ok("TEST");
+            _pccService = pccService;
+        }
+
+        [HttpPost("forward-to-issuer-bank")]
+        public async Task <IActionResult> ToIssuerBank([FromBody] PCCRequestDTO pccRequestDTO)
+        {
+            try
+            {
+                PCCResponseDTO pccResponseDTO = await _pccService.ForwardToIssuerBank(pccRequestDTO);
+                return Ok(pccResponseDTO);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new PCCResponseDTO());
+            }
         }
     }
 }

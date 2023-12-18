@@ -18,6 +18,10 @@
         public string? AcquirerAccountNumber { get; set; }
         public string? IssuerAccountNumber { get; set; }
 
+        public PCCResponseDTO()
+        {            
+        }
+
         public PCCResponseDTO(string? pan, string? securityCode, string? cardHolderName, string? expirationDate, decimal amount, long acquirerOrderId, DateTime acquirerTimestamp, long issuerOrderId, DateTime issuerTimestamp, string? bankId, long merchantOrderId, DateTime merchantTimestamp, string? paymentId, string? acquirerAccountNumber, string? issuerAccountNumber)
         {
             Pan = pan;
