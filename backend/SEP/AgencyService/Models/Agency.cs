@@ -1,10 +1,13 @@
-﻿using Common.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AgencyService.Models
 {
-    public class Agency : AgencyEB
+    public class Agency : EntityBase
     {
+        [Required]
+        public string Name { get; set; } = null!;
         public List<PaymentService>? PaymentServices { get; set; }
         public List<User>? Users { get; set; }
+        public List<ServiceOfferItem>? ServiceOfferItems { get; set;}
     }
 }

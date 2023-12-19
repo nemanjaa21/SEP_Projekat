@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankService", "BankService\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentCardCenterService", "PaymentCardCenterService\PaymentCardCenterService.csproj", "{D951F1D0-7418-4B27-8DCC-5E5E69DE885F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "shared\Shared.csproj", "{7AC8CF4A-7797-4684-9490-2F0AE3B5AFC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "shared\Shared.csproj", "{7AC8CF4A-7797-4684-9490-2F0AE3B5AFC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{CCF44193-C61A-4CF4-A4FE-27DAB8CFE42D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{7AC8CF4A-7797-4684-9490-2F0AE3B5AFC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AC8CF4A-7797-4684-9490-2F0AE3B5AFC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AC8CF4A-7797-4684-9490-2F0AE3B5AFC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCF44193-C61A-4CF4-A4FE-27DAB8CFE42D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCF44193-C61A-4CF4-A4FE-27DAB8CFE42D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCF44193-C61A-4CF4-A4FE-27DAB8CFE42D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCF44193-C61A-4CF4-A4FE-27DAB8CFE42D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

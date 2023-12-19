@@ -12,6 +12,7 @@ namespace AgencyService.Data.Configuration
             builder.Property(x => x.Name).IsRequired();
             builder.HasMany(x => x.PaymentServices).WithMany(x => x.Agencies);
             builder.HasMany(x=> x.Users).WithOne(x=> x.Agency).HasForeignKey(x=>x.AgencyId);
+            builder.HasMany(x=> x.ServiceOfferItems).WithOne(x=> x.Agency).HasForeignKey(x=> x.AgencyId);
         }
     }
 }

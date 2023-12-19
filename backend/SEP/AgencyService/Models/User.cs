@@ -1,8 +1,6 @@
-﻿using Common.Models;
-
-namespace AgencyService.Models
+﻿namespace AgencyService.Models
 {
-    public class User : UserEB
+    public class User : EntityBase
     {
         public Agency Agency { get; set; }
         public int AgencyId { get; set; }
