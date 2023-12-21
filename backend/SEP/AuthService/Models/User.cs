@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AuthService.Enums;
 
 namespace AuthService.Models
 {

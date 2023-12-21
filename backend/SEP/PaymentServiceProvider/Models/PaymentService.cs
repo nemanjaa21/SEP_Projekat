@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Common.Models;
 
 namespace PaymentServiceProvider.Models
 {
-    public class PaymentService : PaymentServiceEB
+    public class PaymentService : EntityBase
     {
+        [Required]
+        public string? Name { get; set; }
     }
 }

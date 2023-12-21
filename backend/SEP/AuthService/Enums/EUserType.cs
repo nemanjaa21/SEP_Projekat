@@ -1,4 +1,4 @@
-﻿namespace AuthService
+﻿namespace AuthService.Enums
 {
     public enum EUserType
     {
