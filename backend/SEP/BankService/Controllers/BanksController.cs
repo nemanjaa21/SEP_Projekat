@@ -47,7 +47,7 @@ namespace BankService.Controllers
                     if (await _accountService.WithdrawMoney(card.Account!.UserId, transaction.Amount))
                     {
                         await _accountService.DepositMoney(transaction.IdMerchant, transaction.Amount);
-                        responseDTO = await _banksService.SendToPSP(cardInfoDTO, card.Account!.UserId, transaction);
+                        responseDTO = await _banksService.SendToPSP(card.Account!.UserId, transaction);
                         return Ok(responseDTO);
                     }
                     else
@@ -109,8 +109,42 @@ namespace BankService.Controllers
             return BadRequest(responseDTO);
         }
 
+        [HttpPost("pay-with-qr-code")]
+        public async Task<IActionResult> PayWithQRCode([FromBody] QRCodeDataDTO QRCodeDataDTO)
+        {
+            PSPResponseDTO responseDTO;
+
+            try
+            {
+                Transaction? transaction = await _transactionService.GetByPaymentId(QRCodeDataDTO.PaymentId!);
+                transaction.Amount = ConvertToUSD(QRCodeDataDTO.Currency, transaction.Amount);
+
+                if (await _accountService.WithdrawMoneyViaAccount(QRCodeDataDTO.UserAccount!, transaction.Amount))
+                {
+                    await _accountService.DepositMoneyViaAccount(QRCodeDataDTO.MerchantAccount!, transaction.Amount);
+                    responseDTO = await _banksService.UpdateTransaction(QRCodeDataDTO.UserAccount!, QRCodeDataDTO.MerchantAccount!, QRCodeDataDTO.UserId ,transaction);
+                    return Ok(responseDTO);
+                }
+                else
+                {
+                    responseDTO = _pspService.GenerateResponseBasedOnURL(Enums.Url.FAILED);
+                    return BadRequest(responseDTO);
+                }
+            }
+            catch (SystemException)
+            {
+                responseDTO = _pspService.GenerateResponseBasedOnURL(Enums.Url.FAILED);
+                return BadRequest(responseDTO);
+            }
+            catch (Exception)
+            {
+                responseDTO = _pspService.GenerateResponseBasedOnURL(Enums.Url.ERROR);
+                return BadRequest(responseDTO);
+            }
+        }
+
         //Dobiti informacije o trenutnom kupcu i prodavcu a zatim generisati QR Code. i poslati sliku na front-end.
-        [HttpPost]
+        [HttpPost("generate-qr-code")]
         public async Task<IActionResult> GenerateQRCode(GenerateQRCodeDTO generateQRCodeDTO)
         {
             var accountMerchant = await _accountService.GetAccountNumberByMerchant(generateQRCodeDTO.MerchantId);
@@ -120,7 +154,7 @@ namespace BankService.Controllers
 
             var merchant = await _merchantService.GetByMerchantId(generateQRCodeDTO.MerchantId);
 
-            string qrText = $"Merchant Full Name: {merchant.FullName}\nMerchant Account: {accountMerchant}\nUser Account: {accountUser}\nAmount: {generateQRCodeDTO.Amount}\nCurrency: {GetCurrencyString(generateQRCodeDTO.Currency)}";
+            string qrText = $"Merchant Full Name: {merchant.FullName}\nMerchant Account: {accountMerchant}\nUser ID: {generateQRCodeDTO.UserId}\nUser Account: {accountUser}\nAmount: {generateQRCodeDTO.Amount}\nCurrency: {GetCurrencyString(generateQRCodeDTO.Currency)}\n PaymentID:{generateQRCodeDTO.PaymentId}";
 
             var qrCodeImage = GenerateQRCodeImage(qrText);
             return File(qrCodeImage, "image/png");
@@ -148,6 +182,16 @@ namespace BankService.Controllers
                 return "EUR";
             else
                 return "RSD";
+        }
+
+        private decimal ConvertToUSD(Currency currency, decimal amount)
+        {
+            if (currency == Currency.USD)
+                return amount;
+            else if (currency == Currency.EUR)
+                return amount * (decimal)1.1;
+            else
+                return amount * (decimal)0.0094;
         }
     }
 }

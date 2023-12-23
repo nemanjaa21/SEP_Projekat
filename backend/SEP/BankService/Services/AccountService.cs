@@ -54,5 +54,31 @@ namespace BankService.Services
             }
             return false;
         }
+
+        public async Task<bool> DepositMoneyViaAccount(string merchantAccount, decimal amount)
+        {
+            var accountReceiver = await _unitOfWork.AccountsRepository.Get(account => account.AccountNumber == merchantAccount);
+            if (accountReceiver != null && accountReceiver.Balance >= amount)
+            {
+                accountReceiver.Balance += amount;
+                _unitOfWork.AccountsRepository.Update(accountReceiver);
+                await _unitOfWork.Save();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> WithdrawMoneyViaAccount(string userAccount, decimal amount)
+        {
+            var accountBuyer = await _unitOfWork.AccountsRepository.Get(account => account.AccountNumber == userAccount);
+            if (accountBuyer != null && accountBuyer.Balance >= amount)
+            {
+                accountBuyer.Balance -= amount;
+                _unitOfWork.AccountsRepository.Update(accountBuyer);
+                await _unitOfWork.Save();
+                return true;
+            }
+            return false;
+        }
     }
 }

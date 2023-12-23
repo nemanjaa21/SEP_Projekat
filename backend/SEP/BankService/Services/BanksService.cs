@@ -92,7 +92,7 @@ namespace BankService.Services
         }
 
         //Ne salje PSP-u samo updatuje transakciju
-        public async Task<PSPResponseDTO> SendToPSP(CardInfoDTO cardInfoDTO, int issuerId, Transaction transaction)
+        public async Task<PSPResponseDTO> SendToPSP (int issuerId, Transaction transaction)
         {
             Random random = new Random();
             string issuerAccountNumber = await _accountService.GetAccountNumberByUser(issuerId);
@@ -124,6 +124,27 @@ namespace BankService.Services
             transaction.IssuerOrderId = pccResponseDTO.IssuerOrderId;
             transaction.IssuerTimestamp = pccResponseDTO.IssuerTimestamp;
             transaction.IssuerAccountNumber = pccResponseDTO.IssuerAccountNumber;
+            transaction.Status = Status.SUCCESSFUL;
+
+            _unitOfWork.TransactionsRepository.Update(transaction);
+            await _unitOfWork.Save();
+
+            return pspResponse;
+        }
+
+        public async Task<PSPResponseDTO> UpdateTransaction(string issuerAccountNumber, string merchantAccountNumber, int userId, Transaction transaction)
+        {
+            Random random = new Random();
+            long acquirerOrderId = (long)(random.NextDouble() * 1000000);
+            DateTime acquirerTimeStamp = DateTime.Now;
+
+            PSPResponseDTO pspResponse = new PSPResponseDTO(successUrl, acquirerOrderId, acquirerTimeStamp, transaction.MerchantOrderId, transaction.PaymentId);
+
+            transaction.AcquirerOrderId = acquirerOrderId;
+            transaction.AcquirerTimestamp = acquirerTimeStamp;
+            transaction.AcquirerAccountNumber = merchantAccountNumber;
+            transaction.IdUser = userId;
+            transaction.IssuerAccountNumber = issuerAccountNumber;
             transaction.Status = Status.SUCCESSFUL;
 
             _unitOfWork.TransactionsRepository.Update(transaction);
