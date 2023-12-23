@@ -9,6 +9,7 @@ namespace BankService.Data.Configuration
         public void Configure(EntityTypeBuilder<Merchant> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.FullName);
             builder.Property(x => x.Merchant_Id).IsRequired();
             builder.Property(x => x.MerchantPassword).IsRequired();
         }

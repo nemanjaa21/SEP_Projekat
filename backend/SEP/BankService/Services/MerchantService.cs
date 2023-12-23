@@ -12,6 +12,15 @@ namespace BankService.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<Merchant> GetByMerchantId(int id)
+        {
+            var merchant = await _unitOfWork.MerchantsRepository.Get(m => m.Id == id);
+            if (merchant == null)
+                throw new Exception($"Merchant with {id} not found!");
+
+            return merchant;
+        }
+
         public async Task<Merchant> GetByMerchantId(string id)
         {
             var merchant = await _unitOfWork.MerchantsRepository.Get(m => m.Merchant_Id == id);

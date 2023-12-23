@@ -1,8 +1,13 @@
 ﻿using BankService.DTO;
+using BankService.Enums;
 using BankService.Interfaces;
 using BankService.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Security.Cryptography;
 
 namespace BankService.Controllers
 {
@@ -15,14 +20,16 @@ namespace BankService.Controllers
         private readonly IAccountService _accountService;
         private readonly ITransactionService _transactionService;
         private readonly IPSPService _pspService;
+        private readonly IMerchantService _merchantService;
 
-        public BanksController(IBanksService banksService, ICardService cardService, IAccountService accountService, ITransactionService transactionService, IPSPService pspService)
+        public BanksController(IBanksService banksService, ICardService cardService, IAccountService accountService, ITransactionService transactionService, IPSPService pspService, IMerchantService merchantService)
         {
             _banksService = banksService;
             _cardService = cardService;
             _accountService = accountService;
             _transactionService = transactionService;
             _pspService = pspService;
+            _merchantService = merchantService;
         }
 
         [HttpPost("pay-with-card")]
@@ -77,7 +84,7 @@ namespace BankService.Controllers
         }
 
         [HttpPost("withdraw-money")]
-        public async Task<IActionResult> WithdrawMoneyFromIssuer([FromBody]PCCRequestDTO pccRequestDTO)
+        public async Task<IActionResult> WithdrawMoneyFromIssuer([FromBody] PCCRequestDTO pccRequestDTO)
         {
             CardInfoDTO cardInfo = new CardInfoDTO()
             {
@@ -90,7 +97,7 @@ namespace BankService.Controllers
             PCCResponseDTO responseDTO = new PCCResponseDTO();
 
             if (_banksService.IsSameBank(pccRequestDTO.Pan!))
-            {                
+            {
                 Card? card = await _cardService.CheckCardInfo(cardInfo);
                 if (await _accountService.WithdrawMoney(card.Account!.UserId, pccRequestDTO.Amount))
                 {
@@ -100,6 +107,47 @@ namespace BankService.Controllers
             }
 
             return BadRequest(responseDTO);
+        }
+
+        //Dobiti informacije o trenutnom kupcu i prodavcu a zatim generisati QR Code. i poslati sliku na front-end.
+        [HttpPost]
+        public async Task<IActionResult> GenerateQRCode(GenerateQRCodeDTO generateQRCodeDTO)
+        {
+            var accountMerchant = await _accountService.GetAccountNumberByMerchant(generateQRCodeDTO.MerchantId);
+            var accountUser = await _accountService.GetAccountNumberByUser(generateQRCodeDTO.UserId);
+            if (accountUser == null || accountMerchant == null)
+                return NotFound("There was an error getting account!");
+
+            var merchant = await _merchantService.GetByMerchantId(generateQRCodeDTO.MerchantId);
+
+            string qrText = $"Merchant Full Name: {merchant.FullName}\nMerchant Account: {accountMerchant}\nUser Account: {accountUser}\nAmount: {generateQRCodeDTO.Amount}\nCurrency: {GetCurrencyString(generateQRCodeDTO.Currency)}";
+
+            var qrCodeImage = GenerateQRCodeImage(qrText);
+            return File(qrCodeImage, "image/png");
+        }
+
+        private byte[] GenerateQRCodeImage(string qrText)
+        {
+            QRCodeGenerator qr = new QRCodeGenerator();
+            QRCodeData data = qr.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(data);
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Bitmap qrCodeImage = qrCode.GetGraphic(20);
+                qrCodeImage.Save(ms, ImageFormat.Png);
+                return ms.ToArray();
+            }
+        }
+
+        private string GetCurrencyString(Currency currency)
+        {
+            if (currency == Currency.USD)
+                return "USD";
+            else if (currency == Currency.EUR)
+                return "EUR";
+            else
+                return "RSD";
         }
     }
 }
