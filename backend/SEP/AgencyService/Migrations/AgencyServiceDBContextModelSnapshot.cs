@@ -21,21 +21,6 @@ namespace AgencyService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AgencyPaymentService", b =>
-                {
-                    b.Property<int>("AgenciesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentServicesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AgenciesId", "PaymentServicesId");
-
-                    b.HasIndex("PaymentServicesId");
-
-                    b.ToTable("AgencyPaymentService");
-                });
-
             modelBuilder.Entity("AgencyService.Models.Agency", b =>
                 {
                     b.Property<int>("Id")
@@ -68,11 +53,19 @@ namespace AgencyService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("AgencyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Subscribed")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AgencyId");
 
                     b.ToTable("PaymentServices");
                 });
@@ -162,19 +155,15 @@ namespace AgencyService.Migrations
                     b.ToTable("ServiceOfferServiceOfferItem");
                 });
 
-            modelBuilder.Entity("AgencyPaymentService", b =>
+            modelBuilder.Entity("AgencyService.Models.PaymentService", b =>
                 {
-                    b.HasOne("AgencyService.Models.Agency", null)
-                        .WithMany()
-                        .HasForeignKey("AgenciesId")
+                    b.HasOne("AgencyService.Models.Agency", "Agency")
+                        .WithMany("PaymentServices")
+                        .HasForeignKey("AgencyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AgencyService.Models.PaymentService", null)
-                        .WithMany()
-                        .HasForeignKey("PaymentServicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Agency");
                 });
 
             modelBuilder.Entity("AgencyService.Models.ServiceOfferItem", b =>
@@ -216,6 +205,8 @@ namespace AgencyService.Migrations
 
             modelBuilder.Entity("AgencyService.Models.Agency", b =>
                 {
+                    b.Navigation("PaymentServices");
+
                     b.Navigation("ServiceOfferItems");
 
                     b.Navigation("Users");

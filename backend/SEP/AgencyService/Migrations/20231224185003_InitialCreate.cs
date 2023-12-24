@@ -61,11 +61,19 @@ namespace AgencyService.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Subscribed = table.Column<bool>(type: "bit", nullable: false),
+                    AgencyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PaymentServices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PaymentServices_Agencies_AgencyId",
+                        column: x => x.AgencyId,
+                        principalTable: "Agencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,30 +95,6 @@ namespace AgencyService.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AgencyPaymentService",
-                columns: table => new
-                {
-                    AgenciesId = table.Column<int>(type: "int", nullable: false),
-                    PaymentServicesId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AgencyPaymentService", x => new { x.AgenciesId, x.PaymentServicesId });
-                    table.ForeignKey(
-                        name: "FK_AgencyPaymentService_Agencies_AgenciesId",
-                        column: x => x.AgenciesId,
-                        principalTable: "Agencies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AgencyPaymentService_PaymentServices_PaymentServicesId",
-                        column: x => x.PaymentServicesId,
-                        principalTable: "PaymentServices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "Agencies",
                 columns: new[] { "Id", "Name" },
@@ -122,9 +106,9 @@ namespace AgencyService.Migrations
                 column: "AgencyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AgencyPaymentService_PaymentServicesId",
-                table: "AgencyPaymentService",
-                column: "PaymentServicesId");
+                name: "IX_PaymentServices_AgencyId",
+                table: "PaymentServices",
+                column: "AgencyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_AgencyId",
@@ -147,13 +131,10 @@ namespace AgencyService.Migrations
                 table: "OfferItems");
 
             migrationBuilder.DropTable(
-                name: "AgencyPaymentService");
+                name: "PaymentServices");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "PaymentServices");
 
             migrationBuilder.DropTable(
                 name: "Agencies");

@@ -10,7 +10,6 @@ const PaymentServices = () => {
         const getAll = async () => {
             try {
                 const response = await getAllPaymentServices(1);
-                console.log(response.data);
                 setServices(response.data);
             } catch (error) {
                 console.error('Greška pri dohvatanju PaymentServices-a:', error);
@@ -28,7 +27,8 @@ const PaymentServices = () => {
 
     const handleSubscribe = async () => {
         try {
-            const response = await subscribeOnPaymentServices(services);
+            console.log(services);
+            const response = await subscribeOnPaymentServices(services, 1);
             setServices(response.data);
         } catch (error) {
             console.error('Greška pri slanju PaymentServices-a:', error);

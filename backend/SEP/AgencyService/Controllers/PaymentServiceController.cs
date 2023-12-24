@@ -1,5 +1,6 @@
 ﻿using AgencyService.DTO;
 using AgencyService.Interfaces;
+using AgencyService.Models;
 using AgencyService.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -31,7 +32,7 @@ namespace AgencyService.Controllers
             return Ok(paymentServices);
         }
 
-        [HttpPost]
+        [HttpPost("create-payment-service")]
         public async Task<IActionResult> CreatePaymentService(CreatePaymentServiceDto paymentServiceDto, int agencyId)
         {
             var item = await _paymentServiceService.CreatePaymentServiceDto(paymentServiceDto, agencyId);
@@ -43,5 +44,17 @@ namespace AgencyService.Controllers
             retValue = _mapper.Map<PaymentServiceDto>(item);
             return Ok(retValue);
         }
+
+        [HttpPut("subscribe-payment-service")]
+        public async Task<IActionResult> SubscribePaymentService([FromBody] List<PaymentServiceDto> paymentServicesDto, int agencyId)
+        {
+            var items = await _paymentServiceService.SubscribePaymentService(paymentServicesDto, agencyId);
+            if (items == null)
+            {
+                return NotFound($"Error while subscribing PaymentService!");
+            }
+            return Ok(items);
+        }
+
     }
 }

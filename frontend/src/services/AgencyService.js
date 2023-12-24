@@ -16,6 +16,6 @@ export const getAllPaymentServices = async (agencyId) => {
   return await agencyApi.get(`/PaymentService/get-payment-services/`+ agencyId);
 }
 
-export const subscribeOnPaymentServices = async (paymentServies) => {
-  return await agencyApi.post(`/PaymentService/`, paymentServies);
+export const subscribeOnPaymentServices = async (paymentServices, agencyId) => {
+  return await agencyApi.put(`/PaymentService/subscribe-payment-service?agencyId=${agencyId}`, paymentServices);
 }

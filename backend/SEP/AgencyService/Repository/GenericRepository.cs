@@ -68,5 +68,16 @@ namespace AgencyService.Repository
         {
             entities.Remove(entity);
         }
+
+        public TEntity Detach<TEntity>(TEntity entity) where TEntity : class
+        {
+            if (_dbContext.Entry(entity).State == EntityState.Detached)
+            {
+                return entity;
+            }
+
+            _dbContext.Entry(entity).State = EntityState.Detached;
+            return entity;
+        }
     }
 }

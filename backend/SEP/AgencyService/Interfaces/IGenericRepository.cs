@@ -12,5 +12,6 @@ namespace AgencyService.Interfaces
         Task Insert(T entity);
         void Update(T entity);
         void Delete(T entity);
+        TEntity Detach<TEntity>(TEntity entity) where TEntity : class;
     }
 }

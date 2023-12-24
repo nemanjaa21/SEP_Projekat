@@ -18,55 +18,45 @@ namespace AgencyService.Service
 
         public async Task<List<PaymentServiceDto>> GetAll(int agencyId)
         {
-            var allPaymentService = await _unitOfWork.PaymentServiceRepository.GetAll(null, null, new List<string>() { "Agencies"} );
+            var allPaymentService = await _unitOfWork.PaymentServiceRepository.GetAll();
+            var agency = await _unitOfWork.AgencyRepository.Get(x => x.Id == agencyId, new List<string>() { "PaymentServices" });
             var subscribedPaymentService = new List<PaymentServiceDto>();
 
             foreach (var paymentService in allPaymentService)
             {
-                bool temp = false;
-                if (paymentService.Agencies.Find(x => x.Id == agencyId) != null)
-                {
-                    temp = true;
-                }
-
-                var pS = new PaymentServiceDto() {Id = paymentService.Id, Name = paymentService.Name, Subscribed = temp};
+                var pS = new PaymentServiceDto() {Id = paymentService.Id, Name = paymentService.Name, Subscribed = paymentService.Subscribed};
                 subscribedPaymentService.Add(pS);
-            }
-            
+            }         
             return subscribedPaymentService;
         }
 
         public async Task<List<PaymentServiceDto>> SubscribePaymentService(List<PaymentServiceDto> paymentServicesDto, int agencyId)
         {
-            var agency = await _unitOfWork.AgencyRepository.Get(x=> x.Id == agencyId);
-            var allPaymentService = await _unitOfWork.PaymentServiceRepository.GetAll();
+            var allPaymentServices = await _unitOfWork.PaymentServiceRepository.GetAll();
 
             foreach (var paymentService in paymentServicesDto)
             {
-                if (paymentService.Subscribed)
+                var item = allPaymentServices.FirstOrDefault(x => x.Id == paymentService.Id);
+                if (item == null)
                 {
-                    var item = allPaymentService.ToList().Find(x => x.Id == paymentService.Id);
-                    item.Agencies.Add(agency);
-                    _unitOfWork.PaymentServiceRepository.Update(item);
+                    continue;
                 }
-                else
-                {
-                    var item = allPaymentService.ToList().Find(x => x.Id == paymentService.Id);
-                    item.Agencies.Remove(agency);
-                    _unitOfWork.PaymentServiceRepository.Update(item);
-                }
-            }
 
-            _unitOfWork.Save();
+               item.Subscribed = paymentService.Subscribed;
+                _unitOfWork.PaymentServiceRepository.Update(item);
+            }
+            await _unitOfWork.Save();
             return paymentServicesDto;
         }
+
+
 
         public async Task<PaymentService> CreatePaymentServiceDto(CreatePaymentServiceDto paymentServiceDto, int agencyId)
         {
             var Agency = await _unitOfWork.AgencyRepository.Get(x => x.Id == agencyId);
-            var paymentService = new PaymentService() { Name = paymentServiceDto.Name, Agencies = new List<Agency>() {Agency } };
-            _unitOfWork.PaymentServiceRepository.Insert(paymentService);
-            _unitOfWork.Save();
+            var paymentService = new PaymentService() { Name = paymentServiceDto.Name, Agency = Agency, AgencyId = Agency.Id, Subscribed = true };
+            await _unitOfWork.PaymentServiceRepository.Insert(paymentService);
+            await _unitOfWork.Save();
             return paymentService;
         }
     }

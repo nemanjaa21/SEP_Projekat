@@ -6,6 +6,8 @@ namespace AgencyService.Models
     {
         [Required]
         public string? Name { get; set; }
-        public List<Agency>? Agencies { get; set; }
+        public bool Subscribed { get; set; }
+        public Agency Agency { get; set; }
+        public int AgencyId { get; set; }
     }
 }
