@@ -22,6 +22,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IServiceOfferItemService, ServiceOfferItemService>();
 builder.Services.AddScoped<IServiceOfferService,  ServiceOfferService>();
+builder.Services.AddScoped<IPaymentServiceService, PaymentServiceService>();
+builder.Services.AddScoped<IAgencyService, AgencyService.Service.AgencyService>();
 
 builder.Services.AddAuthorization();
 

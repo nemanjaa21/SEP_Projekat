@@ -33,6 +33,28 @@ namespace AgencyService.Repository
             return (await query.FirstOrDefaultAsync(expression))!;
         }
 
+        public async Task<IList<T>> GetAll(Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<string>? includes = null)
+        {
+            IQueryable<T> query = entities;
+            if (expression != null)
+            {
+                query = query.Where(expression);
+            }
+            if (includes != null)
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            return (await query.AsNoTracking().ToListAsync())!;
+        }
+
         public async Task Insert(T entity)
         {
             await entities.AddAsync(entity);
@@ -45,6 +67,17 @@ namespace AgencyService.Repository
         public void Delete(T entity)
         {
             entities.Remove(entity);
+        }
+
+        public TEntity Detach<TEntity>(TEntity entity) where TEntity : class
+        {
+            if (_dbContext.Entry(entity).State == EntityState.Detached)
+            {
+                return entity;
+            }
+
+            _dbContext.Entry(entity).State = EntityState.Detached;
+            return entity;
         }
     }
 }

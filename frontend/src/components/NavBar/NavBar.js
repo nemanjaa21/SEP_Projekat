@@ -12,7 +12,7 @@ export default function NavBar() {
     const authContext = useContext(AuthContext);
 
     const handleHomeClick = async () => {
-        navigate('/dashboard'); // popraviti ako je pogresno a vrv jeste
+        navigate('/');
     }
 
     const handleLogoutClick = async () => {

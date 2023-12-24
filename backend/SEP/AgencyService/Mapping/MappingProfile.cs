@@ -10,6 +10,8 @@ namespace AgencyService.Mapping
         {
             CreateMap<ServiceOfferItem, ServiceOfferItemDto>().ReverseMap();
             CreateMap<ServiceOffer, ServiceOfferDto>().ReverseMap();
+            CreateMap<PaymentService, PaymentServiceDto>().ReverseMap();
+            CreateMap<Agency,  AgencyDto>().ReverseMap();
         }
     }
 }

@@ -7,6 +7,9 @@ namespace AgencyService.Data
     {
         public DbSet<ServiceOfferItem>? OfferItems { get; set; }
         public DbSet<ServiceOffer>? Offers { get; set; }
+        public DbSet<Agency>? Agencies { get; set; }
+        public DbSet<PaymentService>? PaymentServices { get; set; }
+        public DbSet<User>? Users { get; set; }
         public AgencyServiceDBContext(DbContextOptions<AgencyServiceDBContext> options) : base(options)
         {
         }

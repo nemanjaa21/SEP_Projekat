@@ -38,7 +38,7 @@ namespace AuthService.Service
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                         new Claim("UserId", user.Id.ToString()),
                         new Claim("Email", user.Email),
-                        new Claim(ClaimTypes.Role, user.Type.ToString()),
+                        new Claim("UserType", user.Type.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "defaultdefault11"));

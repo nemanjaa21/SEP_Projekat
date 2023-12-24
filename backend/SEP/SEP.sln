@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankService", "BankService\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentCardCenterService", "PaymentCardCenterService\PaymentCardCenterService.csproj", "{D951F1D0-7418-4B27-8DCC-5E5E69DE885F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "shared\Shared.csproj", "{7AC8CF4A-7797-4684-9490-2F0AE3B5AFC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "shared\Shared.csproj", "{7AC8CF4A-7797-4684-9490-2F0AE3B5AFC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

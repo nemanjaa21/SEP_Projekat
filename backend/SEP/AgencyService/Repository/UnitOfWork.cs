@@ -9,12 +9,16 @@ namespace AgencyService.Repository
         public readonly DbContext _dbContext;
         public IGenericRepository<ServiceOffer> ServiceOfferRepository { get; }
         public IGenericRepository<ServiceOfferItem> ServiceOfferItemRepository { get; }
+        public IGenericRepository<Agency> AgencyRepository { get; }
+        public IGenericRepository<PaymentService> PaymentServiceRepository { get; }
 
-        public UnitOfWork(DbContext dbContext, IGenericRepository<ServiceOffer> serviceOfferRepository, IGenericRepository<ServiceOfferItem> serviceOfferItemRepository)
+        public UnitOfWork(DbContext dbContext, IGenericRepository<ServiceOffer> serviceOfferRepository, IGenericRepository<ServiceOfferItem> serviceOfferItemRepository, IGenericRepository<Agency> agencyRepository, IGenericRepository<PaymentService> paymentServiceRepository)
         {
             _dbContext = dbContext;
             ServiceOfferRepository = serviceOfferRepository;
             ServiceOfferItemRepository = serviceOfferItemRepository;
+            AgencyRepository = agencyRepository;
+            PaymentServiceRepository = paymentServiceRepository;
         }
 
         public void Dispose()

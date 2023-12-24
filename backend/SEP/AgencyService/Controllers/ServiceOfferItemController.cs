@@ -27,7 +27,7 @@ namespace AgencyService.Controllers
             return Ok(itemsDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get-service-offer-item/{id}")]
         public async Task<IActionResult> GetServiceOfferItem(int id)
         {
             var item = await _serviceOfferItemService.GetServiceOfferItemById(id);
@@ -38,6 +38,19 @@ namespace AgencyService.Controllers
             ServiceOfferItemDto serviceOfferItemDto = new ServiceOfferItemDto();
             serviceOfferItemDto = _mapper.Map<ServiceOfferItemDto>(item);
             return Ok(serviceOfferItemDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateServiceOfferItem(CreateServiceOfferItemDto serviceOfferItemDto, int agencyId)
+        {
+            var item = await _serviceOfferItemService.CreateServiceOfferItem(serviceOfferItemDto, agencyId);
+            if (item == null)
+            {
+                return NotFound($"Error while creating ServiceOfferItem!");
+            }
+            ServiceOfferItemDto retValue = new ServiceOfferItemDto();
+            retValue = _mapper.Map<ServiceOfferItemDto>(item);
+            return Ok(retValue);
         }
     }
 }

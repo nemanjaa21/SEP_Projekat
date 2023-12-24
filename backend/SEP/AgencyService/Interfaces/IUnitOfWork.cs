@@ -6,6 +6,8 @@ namespace AgencyService.Interfaces
     {
         IGenericRepository<ServiceOffer> ServiceOfferRepository { get; }
         IGenericRepository<ServiceOfferItem> ServiceOfferItemRepository { get; }
+        IGenericRepository<Agency> AgencyRepository { get; }
+        IGenericRepository<PaymentService> PaymentServiceRepository { get; }
         Task Save();
     }
 }

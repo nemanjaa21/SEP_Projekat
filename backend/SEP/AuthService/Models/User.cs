@@ -1,5 +1,5 @@
-﻿using AuthService.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using AuthService.Enums;
 
 namespace AuthService.Models
 {
