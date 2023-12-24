@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaymentServiceProvider.Data;
 
@@ -10,9 +11,10 @@ using PaymentServiceProvider.Data;
 namespace PaymentServiceProvider.Migrations
 {
     [DbContext(typeof(PaymentServiceDbContext))]
-    partial class PaymentServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231224230246_merchantMigration")]
+    partial class merchantMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

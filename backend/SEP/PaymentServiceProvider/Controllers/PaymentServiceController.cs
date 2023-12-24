@@ -30,7 +30,7 @@ namespace PaymentServiceProvider.Controllers
             return Ok(paymentServiceDto);
         }
 
-        [HttpPost]
+        [HttpPost("process-payment")]
         public async Task<IActionResult> ProcessPayment(PSPRequest pspRequest, string apiKey)
         {
             PaymentResponse paymentResponse = await _paymentService.ProcessPayment(pspRequest, apiKey);

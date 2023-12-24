@@ -29,6 +29,9 @@ namespace AgencyService.Controllers
             {
                 return NotFound($"PaymentServices of agency with id {id} does not exist!");
             }
+
+            paymentServices = paymentServices.Where(p => p.Subscribed).ToList();
+
             return Ok(paymentServices);
         }
 

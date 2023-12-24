@@ -16,4 +16,8 @@ export const payPalPayment = async () => {
   return await pspApi.get(`/paypal-payment`);
 };
 
+export const processPayment = async (pspRequest, apiKey) => {
+  return await pspApi.post(`PaymentService/process-payment?apiKey=${apiKey}`, pspRequest);
+}
+
 //POTREBNO OMOGUCITI AGENCIJAMA DA SE DODATNO PRIJAVLJUJU ILI SKIDAJU PAYMENTE U PSP-u

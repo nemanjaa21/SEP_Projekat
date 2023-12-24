@@ -12,13 +12,17 @@ namespace PaymentServiceProvider.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<string> GenerateApiKey(string merchantId, string merchantPassword)
+        public async Task<string> GenerateApiKey(string merchantId)
         {
             Merchant? merchant = await _unitOfWork.MerchantRepository.Get(x => x.MerchantId == merchantId);
             if (merchant == null)
                 throw new Exception($"Merchant with id {merchantId} not found.");
 
-            merchant.ApiKey = BCrypt.Net.BCrypt.HashPassword(merchantId + merchantPassword + DateTime.Now.Ticks.ToString());
+            merchant.ApiKey = merchantId + DateTime.Now.Ticks.ToString();
+
+            _unitOfWork.MerchantRepository.Update(merchant);
+            await _unitOfWork.Save();
+
             return merchant.ApiKey;
         }
 
@@ -34,10 +38,7 @@ namespace PaymentServiceProvider.Services
         public async Task<Merchant> GetMerchantById(string merchantId)
         {
             Merchant? merchant = await _unitOfWork.MerchantRepository.Get(x => x.MerchantId == merchantId);
-            if (merchant == null)
-                throw new Exception($"Merchant with id {merchantId} not found.");
-
-            return merchant;
+            return merchant!;
         }
 
         public async Task<string> RegisterMerchant(Merchant newMerchant)
@@ -47,12 +48,11 @@ namespace PaymentServiceProvider.Services
                 throw new Exception($"Merchant with id {newMerchant.MerchantId} is already registered.");
 
             newMerchant.MerchantPassword = BCrypt.Net.BCrypt.HashPassword(newMerchant.MerchantPassword);
-            newMerchant.ApiKey = await GenerateApiKey(newMerchant.MerchantId!, newMerchant.MerchantPassword);
 
             await _unitOfWork.MerchantRepository.Insert(newMerchant);
             await _unitOfWork.Save();
-
-            return newMerchant.ApiKey;
+            
+            return await GenerateApiKey(newMerchant.MerchantId!);
         }
     }
 }

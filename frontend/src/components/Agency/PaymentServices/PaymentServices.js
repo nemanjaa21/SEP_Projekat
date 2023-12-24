@@ -27,7 +27,6 @@ const PaymentServices = () => {
 
     const handleSubscribe = async () => {
         try {
-            console.log(services);
             const response = await subscribeOnPaymentServices(services, 1);
             setServices(response.data);
         } catch (error) {

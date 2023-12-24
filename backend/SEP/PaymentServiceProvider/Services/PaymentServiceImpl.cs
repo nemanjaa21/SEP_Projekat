@@ -12,18 +12,12 @@ namespace PaymentServiceProvider.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMerchantService _merchantService;
-        private readonly ConnectionFactory factory;
-        private readonly IConnection connection;
-        private readonly IModel channel;
         HttpClient _httpClient;
 
         public PaymentServiceImpl(IUnitOfWork unitOfWork, IMerchantService merchantService) 
         { 
             _unitOfWork = unitOfWork;
             _merchantService = merchantService;
-            factory = new ConnectionFactory() { HostName = "localhost" };
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
             _httpClient = new HttpClient();
         }
 
@@ -58,6 +52,10 @@ namespace PaymentServiceProvider.Services
 
         private PaymentResponse SendPaymentRequestAndGetResponse(PaymentRequest request, string paymentTypeName)
         {
+            ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost" };
+            IConnection connection = factory.CreateConnection();
+            IModel channel = connection.CreateModel();
+
             channel.QueueDeclare(queue: paymentTypeName, durable: false, exclusive: false, autoDelete: false, arguments: null);
             var replyQueueName = channel.QueueDeclare().QueueName;
 

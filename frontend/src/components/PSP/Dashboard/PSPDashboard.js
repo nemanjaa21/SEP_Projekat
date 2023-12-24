@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import {
   bitcoinPayment,
-  creditCardPayment,
   payPalPayment,
+  processPayment,
   qrCodePayment,
 } from "../../../services/PSPService.js";
 import { getServiceOfferById } from "../../../services/AgencyService.js";
@@ -37,7 +37,11 @@ const PSPDashboard = () => {
 
   const getCardPayment = async () => {
     try {
-      const response = await creditCardPayment();
+      let pspRequest = {
+        amount: serviceOffer.totalPrice.toFixed(2),
+        paymentTypeId: 5
+      }
+      const response = await processPayment(pspRequest, process.env.REACT_APP_MERCHANT_API_KEY);
       return response.data;
     } catch (error) {
       console.error("Greška pri placanju karticom:", error);
@@ -93,8 +97,6 @@ const PSPDashboard = () => {
       default:
         break;
     }
-
-    console.log(paymentResult);
   };
 
   function checkOfferName(eOfferName) {

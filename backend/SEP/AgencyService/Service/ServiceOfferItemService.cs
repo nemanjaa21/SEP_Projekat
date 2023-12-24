@@ -35,8 +35,8 @@ namespace AgencyService.Service
         {
             var Agency = await _unitOfWork.AgencyRepository.Get(x=> x.Id == agencyId);
             var serviceOfferItem = new ServiceOfferItem() { OfferName = serviceOfferItemDto.OfferName, MonthlyPrice = serviceOfferItemDto.MonthlyPrice, YearlyPrice = serviceOfferItemDto.YearlyPrice, IsAccepted = false,  Agency = Agency, AgencyId = agencyId };
-            _unitOfWork.ServiceOfferItemRepository.Insert(serviceOfferItem);
-            _unitOfWork.Save();
+            await _unitOfWork.ServiceOfferItemRepository.Insert(serviceOfferItem);
+            await _unitOfWork.Save();
             return serviceOfferItem;
         }
     }

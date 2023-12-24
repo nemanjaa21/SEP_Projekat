@@ -12,7 +12,6 @@ const AuthContext = React.createContext({
 });
 
 const decodeToken = (token) => {
-  console.log("token", token);
   try {
     const decoded = jwtDecode(token);
     return decoded;
