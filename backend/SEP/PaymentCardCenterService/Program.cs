@@ -6,7 +6,7 @@ using PaymentCardCenterService.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<BankDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("BankDB")));
+builder.Services.AddDbContext<BankDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("PccDB")));
 
 builder.Services.AddScoped<DbContext, BankDbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

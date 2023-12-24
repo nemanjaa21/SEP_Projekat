@@ -56,7 +56,7 @@ namespace BankService.Services
             {
                 string jsonRequest = JsonConvert.SerializeObject(pccRequestDTO);
                 var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await _httpClient.PostAsync("http://localhost:7241/api/PCC/forward-to-issuer-bank", content);
+                HttpResponseMessage response = await _httpClient.PostAsync("https://localhost:7241/api/PCC/forward-to-issuer-bank", content);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
                 PCCResponseDTO? pccResponseDTO = JsonConvert.DeserializeObject<PCCResponseDTO>(responseBody);

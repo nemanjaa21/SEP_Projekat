@@ -17,7 +17,7 @@ namespace BankService.Controllers
             _pspService = pspService;
         }
 
-        [HttpPost]
+        [HttpPost("process-payment")]
         public async Task<IActionResult> ProcessPayment(PaymentRequest paymentRequest)
         {
             PaymentResponse paymentResponse = await _pspService.ProcessPayment(paymentRequest);

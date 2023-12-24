@@ -1,6 +1,10 @@
-﻿using PaymentServiceProvider.Interfaces;
+﻿using Newtonsoft.Json;
+using PaymentServiceProvider.Interfaces;
 using PaymentServiceProvider.Models;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using shared;
+using System.Text;
 
 namespace PaymentServiceProvider.Services
 {
@@ -8,11 +12,19 @@ namespace PaymentServiceProvider.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMerchantService _merchantService;
+        private readonly ConnectionFactory factory;
+        private readonly IConnection connection;
+        private readonly IModel channel;
+        HttpClient _httpClient;
 
-        public PaymentServiceImpl(IUnitOfWork unitOfWork, IMerchantService merchantService)
-        {
+        public PaymentServiceImpl(IUnitOfWork unitOfWork, IMerchantService merchantService) 
+        { 
             _unitOfWork = unitOfWork;
             _merchantService = merchantService;
+            factory = new ConnectionFactory() { HostName = "localhost" };
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
+            _httpClient = new HttpClient();
         }
 
         public async Task<List<PaymentService>> GetAllPaymentMethods()
@@ -32,24 +44,63 @@ namespace PaymentServiceProvider.Services
 
         public async Task<PaymentResponse> ProcessPayment(PSPRequest pspRequest, string apiKey)
         {
-            try
+            Random random = new Random();
+            Merchant? merchant = await _merchantService.GetMercantByApiKey(apiKey);
+            PaymentService? paymentType = await GetPaymentService(pspRequest.PaymentTypeId);
+            long merchantOrderId = (long)(random.NextDouble() * 1000000);
+
+            PaymentRequest paymentRequest = new PaymentRequest(merchant.MerchantId, merchant.MerchantPassword, pspRequest.Amount, merchantOrderId, DateTime.Now, "SUCCESS_URL", "FAIL_URL", "ERROR_URL");
+
+            PaymentResponse? response = SendPaymentRequestAndGetResponse(paymentRequest, paymentType.Name!);
+
+            string jsonRequest = JsonConvert.SerializeObject(paymentRequest);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+            HttpResponseMessage responseMessage = await _httpClient.PostAsync("https://localhost:7172/api/PSP/process-payment", content);
+
+            string? responseBody = await responseMessage.Content.ReadAsStringAsync();
+            PaymentResponse? paymentResponse = JsonConvert.DeserializeObject<PaymentResponse>(responseBody);
+
+            return paymentResponse!;
+        }
+
+        private PaymentResponse SendPaymentRequestAndGetResponse(PaymentRequest request, string paymentTypeName)
+        {
+            channel.QueueDeclare(queue: paymentTypeName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            var replyQueueName = channel.QueueDeclare().QueueName;
+
+            var consumer = new EventingBasicConsumer(channel);
+            var correlationId = Guid.NewGuid().ToString();
+
+            var props = channel.CreateBasicProperties();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
+            var message = JsonConvert.SerializeObject(request);
+            var body = Encoding.UTF8.GetBytes(message);
+
+            channel.BasicPublish(exchange: "",
+                             routingKey: paymentTypeName,
+                             basicProperties: props,
+                             body: body);
+
+            PaymentResponse? response = null;
+            var responseEvent = new ManualResetEvent(false);
+
+            consumer.Received += (model, ea) =>
             {
-                Random random = new Random();
-                Merchant? merchant = await _merchantService.GetMercantByApiKey(apiKey);
-                PaymentService? paymentType = await GetPaymentService(pspRequest.PaymentTypeId);
-                long merchantOrderId = (long)(random.NextDouble() * 1000000);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    var responseMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
+                    response = JsonConvert.DeserializeObject<PaymentResponse>(responseMessage);
+                    responseEvent.Set();
+                }
+            };
 
-                PaymentRequest paymentRequest = new PaymentRequest(merchant.MerchantId, merchant.MerchantPassword, pspRequest.Amount, merchantOrderId, DateTime.Now, "SUCCESS_URL", "FAIL_URL", "ERROR_URL");              
+            channel.BasicConsume(queue: replyQueueName, autoAck: true, consumer: consumer);
 
-                //OVE URLOVE TREBA POVUCI IZ CONFIG-A VRV, I OVDE SE NEKIM BROOKEROM SALJE NA MIKROSERVISE.
-                //PaymentResponse = brooker.sendRequest(paymentType, paymentRequest)
+            responseEvent.WaitOne();
 
-                return new PaymentResponse(null, "SUCCESS_URL");
-            }
-            catch (Exception)
-            {
-                return new PaymentResponse(null, "FAIL_URL");
-            }
+            return response!;
         }
     }
 }

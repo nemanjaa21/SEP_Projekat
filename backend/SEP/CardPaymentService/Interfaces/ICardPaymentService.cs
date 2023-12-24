@@ -2,6 +2,6 @@
 {
     public interface ICardPaymentService
     {
-        Task<string> MakePayment();
+        void MakePayment();
     }
 }

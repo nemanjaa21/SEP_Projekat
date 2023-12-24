@@ -14,22 +14,22 @@ namespace PaymentServiceProvider.Data.Configuration
             builder.HasData(new PaymentService()
             {
                 Id = 1,
-                Name = "Credit Card Payment"
+                Name = "Credit_Card_Payment"
             },
             new PaymentService()
             {
                 Id = 2,
-                Name = "Bitcoin Payment"
+                Name = "Bitcoin_Payment"
             },
             new PaymentService()
             {
                 Id = 3,
-                Name = "QR Code Payment"
+                Name = "QR_Code_Payment"
             },
             new PaymentService()
             {
                 Id = 4,
-                Name = "PayPal Payment"
+                Name = "PayPal_Payment"
             });
         }
     }

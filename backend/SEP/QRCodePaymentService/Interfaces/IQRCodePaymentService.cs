@@ -2,6 +2,6 @@
 {
     public interface IQRCodePaymentService
     {
-        Task<string> MakePayment();
+        void MakePayment();
     }
 }
