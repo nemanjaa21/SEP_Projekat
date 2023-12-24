@@ -4,6 +4,7 @@ using RabbitMQ.Client;
 using shared;
 using System.Text;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace QRCodePaymentService.Services
 {
@@ -13,6 +14,7 @@ namespace QRCodePaymentService.Services
         private readonly IConnection _connection;
         private readonly IModel _channel;
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
         private string queueName;
         private string bankUrl;
         public QRCodePaymentServiceImpl(IConfiguration configuration)
@@ -20,7 +22,8 @@ namespace QRCodePaymentService.Services
             _factory = new ConnectionFactory() { HostName = "localhost" };
             _connection = _factory.CreateConnection();
             _channel = _connection.CreateModel();
-            this._configuration = configuration;
+            _configuration = configuration;
+            _httpClient = new HttpClient();
 
             queueName = _configuration["QUEUE_NAME"];
             bankUrl = _configuration["BANKURL"];
@@ -32,14 +35,19 @@ namespace QRCodePaymentService.Services
 
             var consumer = new EventingBasicConsumer(_channel);
 
-            consumer.Received += (model, ea) =>
+            consumer.Received += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
                 PaymentRequest? paymentRequest = JsonConvert.DeserializeObject<PaymentRequest>(message);
 
-                PaymentResponse paymentResponse = new PaymentResponse(bankUrl, null);
+                string jsonRequest = JsonConvert.SerializeObject(paymentRequest);
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                HttpResponseMessage httpResponse = await _httpClient.PostAsync(bankUrl, content);
+
+                string? responseBody = await httpResponse.Content.ReadAsStringAsync();
+                PaymentResponse? paymentResponse = JsonConvert.DeserializeObject<PaymentResponse>(responseBody);
 
                 var props = ea.BasicProperties;
                 var replyProps = _channel.CreateBasicProperties();

@@ -53,14 +53,7 @@ namespace PaymentServiceProvider.Services
 
             PaymentResponse? response = SendPaymentRequestAndGetResponse(paymentRequest, paymentType.Name!);
 
-            string jsonRequest = JsonConvert.SerializeObject(paymentRequest);
-            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-            HttpResponseMessage responseMessage = await _httpClient.PostAsync("https://localhost:7172/api/PSP/process-payment", content);
-
-            string? responseBody = await responseMessage.Content.ReadAsStringAsync();
-            PaymentResponse? paymentResponse = JsonConvert.DeserializeObject<PaymentResponse>(responseBody);
-
-            return paymentResponse!;
+            return response!;
         }
 
         private PaymentResponse SendPaymentRequestAndGetResponse(PaymentRequest request, string paymentTypeName)
