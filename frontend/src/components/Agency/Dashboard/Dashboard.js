@@ -14,15 +14,15 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const role = authCtx.role;
 
-  // const isAgencyUser = (role === "AGENCY_REGISTRATION_EMPLOYEE" || 
-  //                       role === "AGENCY_REGISTRATION_DIRECTOR" || 
-  //                       role === "AGENCY_CODIFICATION_LAYER" || 
-  //                       role === "AGENCY_CODIFICATION_DIRECTOR");
-  // const isGovernmentUser = (role === "GOVERNMENT_PRIME_MINISTER" || 
-  //                           role === "GOVERNMENT_DIRECTOR" || 
-  //                           role === "GOVERNMENT_EMPLOYEE");
-  const isAgencyUser = (role === 0 ||  role === 1 || role === 2 || role === 3);
-  const isGovernmentUser = (role === 4 || role === 5 || role === 6);                         
+  const isAgencyUser = (role === "AGENCY_REGISTRATION_EMPLOYEE" || 
+                        role === "AGENCY_REGISTRATION_DIRECTOR" || 
+                        role === "AGENCY_CODIFICATION_LAYER" || 
+                        role === "AGENCY_CODIFICATION_DIRECTOR");
+  const isGovernmentUser = (role === "GOVERNMENT_PRIME_MINISTER" || 
+                            role === "GOVERNMENT_DIRECTOR" || 
+                            role === "GOVERNMENT_EMPLOYEE");
+  // const isAgencyUser = (role === 0 ||  role === 1 || role === 2 || role === 3);
+  // const isGovernmentUser = (role === 4 || role === 5 || role === 6);                         
   
   const paymentServiceHandler = async (event) => {
     navigate("/paymentServices");

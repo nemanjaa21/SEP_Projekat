@@ -63,7 +63,8 @@ const ServiceOfferItem = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#243b55"
+        backgroundColor: "#243b55",
+        color: "#ffff"
       }}>
         <Container maxWidth="sm">
           <Typography variant="h4" align="center" gutterBottom sx={{color: "#ffff"}}>

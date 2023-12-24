@@ -10,6 +10,7 @@ const PaymentServices = () => {
         const getAll = async () => {
             try {
                 const response = await getAllPaymentServices(1);
+                console.log(response.data);
                 setServices(response.data);
             } catch (error) {
                 console.error('Greška pri dohvatanju PaymentServices-a:', error);
@@ -21,7 +22,7 @@ const PaymentServices = () => {
 
     const handleCheckboxChange = (index) => () => {
         const updatedServices = [...services];
-        updatedServices[index].Subscribed = !updatedServices[index].Subscribed;
+        updatedServices[index].subscribed = !updatedServices[index].subscribed;
         setServices(updatedServices);
     };
 
@@ -51,12 +52,12 @@ const PaymentServices = () => {
                     </Typography>
                     <List>
                         {services.map((service, index) => (
-                            <ListItem key={service.Id} disablePadding>
-                                <Checkbox
-                                    checked={service.Subscribed}
+                            <ListItem key={service.id} disablePadding>
+                                <Checkbox sx={{ color: "#ffff" }}
+                                    checked={service.subscribed}
                                     onChange={handleCheckboxChange(index)}
                                 />
-                                <ListItemText primary={service.Name} />
+                                <ListItemText sx={{ color: "#ffff" }} primary={service.name} />
                             </ListItem>
                         ))}
                     </List>

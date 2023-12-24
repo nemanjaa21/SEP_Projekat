@@ -43,8 +43,8 @@ export const AuthContextProvider = (props) => {
   const logInHandler = async (logInData) => {
     try {
       const response = await login(logInData);
-      const decodedToken = decodeToken(response.data);
-      let role = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      const decodedToken = decodeToken(response.data.token);
+      let role = decodedToken.UserType;
 
       setIsLoggedIn(true);
       setToken(response.data.token);

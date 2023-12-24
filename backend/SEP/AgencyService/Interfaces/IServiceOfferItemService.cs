@@ -1,4 +1,5 @@
-﻿using AgencyService.Models;
+﻿using AgencyService.DTO;
+using AgencyService.Models;
 
 namespace AgencyService.Interfaces
 {
@@ -6,5 +7,6 @@ namespace AgencyService.Interfaces
     {
         Task<ServiceOfferItem> GetServiceOfferItemById(int id);
         Task<List<ServiceOfferItem>> GetAllServiceOfferItem();
+        Task<ServiceOfferItem> CreateServiceOfferItem(CreateServiceOfferItemDto serviceOfferItemDto, int agencyId);
     }
 }

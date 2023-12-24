@@ -18,8 +18,13 @@ namespace AgencyService.Data.Configuration
             builder.HasData(new Agency()
             {
                 Id = 1,
-                Name = "Agency",
-                PaymentServices = new List<PaymentService>()
+                Name = "Agency"
+            });
+        }
+    }
+
+    /*
+     PaymentServices = new List<PaymentService>()
                 {
                    new PaymentService()
                    {
@@ -77,7 +82,5 @@ namespace AgencyService.Data.Configuration
                         YearlyPrice = 39.99
                    }
                 }
-            });
-        }
-    }
+     */
 }

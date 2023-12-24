@@ -20,7 +20,7 @@ namespace AgencyService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("get-payment-services/{id}")]
         public async Task<IActionResult> GetAll(int id)
         {
             var paymentServices = await _paymentServiceService.GetAll(id);
@@ -29,6 +29,19 @@ namespace AgencyService.Controllers
                 return NotFound($"PaymentServices of agency with id {id} does not exist!");
             }
             return Ok(paymentServices);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePaymentService(CreatePaymentServiceDto paymentServiceDto, int agencyId)
+        {
+            var item = await _paymentServiceService.CreatePaymentServiceDto(paymentServiceDto, agencyId);
+            if (item == null)
+            {
+                return NotFound($"Error while creating PaymentService!");
+            }
+            PaymentServiceDto retValue = new PaymentServiceDto();
+            retValue = _mapper.Map<PaymentServiceDto>(item);
+            return Ok(retValue);
         }
     }
 }

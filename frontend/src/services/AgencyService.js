@@ -13,9 +13,9 @@ export const createServiceOffer = async (serviceOffer) => {
 };
 
 export const getAllPaymentServices = async (agencyId) => {
-  return await agencyApi.get(`/PaymentServices`, agencyId);
+  return await agencyApi.get(`/PaymentService/get-payment-services/`+ agencyId);
 }
 
 export const subscribeOnPaymentServices = async (paymentServies) => {
-  return await agencyApi.post(`/PaymentServices`, paymentServies);
+  return await agencyApi.post(`/PaymentService/`, paymentServies);
 }

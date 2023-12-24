@@ -13,7 +13,7 @@ const AppRoutes = () => {
   
     return (
       <Routes>
-        <Route path="/" element={!isLoggedIn ? <Dashboard /> : <Login />} />
+        <Route path="/" element={isLoggedIn ? <Dashboard /> : <Login />} />
         <Route path="/serviceOfferItem" element={<ServiceOfferItem />} />
         <Route path="/paymentServices" element={<PaymentServices />}/>
         <Route path="/pspDashboard" element={<PSPDashboard />} />

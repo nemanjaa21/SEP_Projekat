@@ -18,7 +18,7 @@ namespace AgencyService.Service
 
         public async Task<List<PaymentServiceDto>> GetAll(int agencyId)
         {
-            var allPaymentService = await _unitOfWork.PaymentServiceRepository.GetAll();
+            var allPaymentService = await _unitOfWork.PaymentServiceRepository.GetAll(null, null, new List<string>() { "Agencies"} );
             var subscribedPaymentService = new List<PaymentServiceDto>();
 
             foreach (var paymentService in allPaymentService)
@@ -59,6 +59,15 @@ namespace AgencyService.Service
 
             _unitOfWork.Save();
             return paymentServicesDto;
+        }
+
+        public async Task<PaymentService> CreatePaymentServiceDto(CreatePaymentServiceDto paymentServiceDto, int agencyId)
+        {
+            var Agency = await _unitOfWork.AgencyRepository.Get(x => x.Id == agencyId);
+            var paymentService = new PaymentService() { Name = paymentServiceDto.Name, Agencies = new List<Agency>() {Agency } };
+            _unitOfWork.PaymentServiceRepository.Insert(paymentService);
+            _unitOfWork.Save();
+            return paymentService;
         }
     }
 }
