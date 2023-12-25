@@ -15,14 +15,18 @@ namespace AgencyService.Service
 
         public async Task<Agency> GetAgencyById(int id)
         {
-            return await _unitOfWork.AgencyRepository.Get(x=> x.Id == id);
+            Agency? agency = await _unitOfWork.AgencyRepository.Get(x => x.Id == id);
+            if (agency == null)
+                throw new Exception("Agency doesn't exist");
+
+            return agency;
         }
 
         public async Task<Agency> RegisterAgency(RegisterAgencyDto registerAgencyDto, int userId)
         {
-            Agency newAgency = new Agency() { Name = registerAgencyDto.Name };
-            _unitOfWork.AgencyRepository.Insert(newAgency);
-            _unitOfWork.Save();
+            Agency newAgency = new Agency() { Name = registerAgencyDto.Name! };
+            await _unitOfWork.AgencyRepository.Insert(newAgency);
+            await _unitOfWork.Save();
             return newAgency;
         }
     }

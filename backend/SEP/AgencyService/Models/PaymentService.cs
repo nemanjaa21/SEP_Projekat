@@ -7,7 +7,7 @@ namespace AgencyService.Models
         [Required]
         public string? Name { get; set; }
         public bool Subscribed { get; set; }
-        public Agency Agency { get; set; }
+        public Agency? Agency { get; set; }
         public int AgencyId { get; set; }
     }
 }

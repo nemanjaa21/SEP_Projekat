@@ -2,7 +2,7 @@
 {
     public class User : EntityBase
     {
-        public Agency Agency { get; set; }
+        public Agency? Agency { get; set; }
         public int AgencyId { get; set; }
     }
 }
