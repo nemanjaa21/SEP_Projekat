@@ -1,5 +1,4 @@
-using CardPaymentService.Interfaces;
-using CardPaymentService.Services;
+using CardPaymentService.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +8,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ICardPaymentService, CardPaymentServiceImpl>();
+builder.Services.AddSingleton<IRabbitMqUtil, RabbitMqUtil>()
+    .AddHostedService<RabbitMqService>();
 
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 

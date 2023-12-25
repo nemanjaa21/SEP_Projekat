@@ -15,15 +15,15 @@ namespace BankService.Data.Configuration
             builder.Property(x => x.Amount).IsRequired();
             builder.Property(x => x.MerchantOrderId).IsRequired();
             builder.Property(x => x.MerchantTimestamp).IsRequired();
-            builder.Property(x => x.AcquirerOrderId).IsRequired();
-            builder.Property(x => x.AcquirerTimestamp).IsRequired();
-            builder.Property(x => x.IssuerOrderId).IsRequired();
-            builder.Property(x => x.IssuerTimestamp).IsRequired();
+            builder.Property(x => x.AcquirerOrderId).IsRequired(false);
+            builder.Property(x => x.AcquirerTimestamp).IsRequired(false);
+            builder.Property(x => x.IssuerOrderId).IsRequired(false);
+            builder.Property(x => x.IssuerTimestamp).IsRequired(false);
             builder.Property(x => x.Status).HasConversion(new EnumToStringConverter<Status>()).IsRequired();
 
             builder.Property(x => x.PaymentId).IsRequired();
-            builder.Property(x => x.AcquirerAccountNumber).IsRequired();
-            builder.Property(x => x.IssuerAccountNumber).IsRequired();
+            builder.Property(x => x.AcquirerAccountNumber).IsRequired(false);
+            builder.Property(x => x.IssuerAccountNumber).IsRequired(false);
             builder.Property(x => x.Merchant_Id);
 
             builder.HasOne(x => x.Merchant)

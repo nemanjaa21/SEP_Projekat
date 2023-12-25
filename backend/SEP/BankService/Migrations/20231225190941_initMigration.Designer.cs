@@ -4,6 +4,7 @@ using BankService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankService.Migrations
 {
     [DbContext(typeof(BankDbContext))]
-    partial class BankDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231225190941_initMigration")]
+    partial class initMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,12 +130,13 @@ namespace BankService.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AcquirerAccountNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("AcquirerOrderId")
+                    b.Property<long>("AcquirerOrderId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("AcquirerTimestamp")
+                    b.Property<DateTime>("AcquirerTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Amount")
@@ -142,16 +145,17 @@ namespace BankService.Migrations
                     b.Property<int>("IdMerchant")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdUser")
+                    b.Property<int>("IdUser")
                         .HasColumnType("int");
 
                     b.Property<string>("IssuerAccountNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("IssuerOrderId")
+                    b.Property<long>("IssuerOrderId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("IssuerTimestamp")
+                    b.Property<DateTime>("IssuerTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("MerchantOrderId")
@@ -241,7 +245,9 @@ namespace BankService.Migrations
 
                     b.HasOne("BankService.Models.User", "User")
                         .WithMany("Transactions")
-                        .HasForeignKey("IdUser");
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Merchant");
 

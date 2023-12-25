@@ -44,10 +44,10 @@ namespace BankService.Controllers
                 {
                     Card? card = await _cardService.CheckCardInfo(cardInfoDTO);
 
-                    if (await _accountService.WithdrawMoney(card.Account!.UserId, transaction.Amount))
+                    if (await _accountService.WithdrawMoney(card.Account!.UserId!.Value, transaction.Amount))
                     {
                         await _accountService.DepositMoney(transaction.IdMerchant, transaction.Amount);
-                        responseDTO = await _banksService.SendToPSP(card.Account!.UserId, transaction);
+                        responseDTO = await _banksService.SendToPSP(card.Account!.UserId!.Value, transaction);
                         return Ok(responseDTO);
                     }
                     else
@@ -99,9 +99,9 @@ namespace BankService.Controllers
             if (_banksService.IsSameBank(pccRequestDTO.Pan!))
             {
                 Card? card = await _cardService.CheckCardInfo(cardInfo);
-                if (await _accountService.WithdrawMoney(card.Account!.UserId, pccRequestDTO.Amount))
+                if (await _accountService.WithdrawMoney(card.Account!.UserId!.Value, pccRequestDTO.Amount))
                 {
-                    responseDTO = await _banksService.ResendToPCC(pccRequestDTO, card.Account!.AccountNumber!, card.Account!.UserId);
+                    responseDTO = await _banksService.ResendToPCC(pccRequestDTO, card.Account!.AccountNumber!, card.Account!.UserId!.Value);
                     return Ok(responseDTO);
                 }
             }

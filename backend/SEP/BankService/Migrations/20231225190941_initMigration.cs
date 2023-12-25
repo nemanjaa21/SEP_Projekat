@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BankService.Migrations
 {
-    public partial class InitMigration : Migration
+    public partial class initMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,8 +15,10 @@ namespace BankService.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Merchant_Id = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MerchantPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MerchantId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MerchantPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApiKey = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,11 +47,11 @@ namespace BankService.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Balance = table.Column<double>(type: "float", nullable: false),
-                    Reserved = table.Column<double>(type: "float", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Reserved = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Merchant_Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    MerchantId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    MerchantId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,14 +60,12 @@ namespace BankService.Migrations
                         name: "FK_Account_Merchant_MerchantId",
                         column: x => x.MerchantId,
                         principalTable: "Merchant",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Account_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -74,8 +74,8 @@ namespace BankService.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<double>(type: "float", nullable: false),
-                    MerchantOrderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MerchantOrderId = table.Column<long>(type: "bigint", nullable: false),
                     MerchantTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AcquirerOrderId = table.Column<long>(type: "bigint", nullable: false),
                     AcquirerTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -112,7 +112,7 @@ namespace BankService.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pan = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SecurityCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CardHolderName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpirationDate = table.Column<string>(type: "nvarchar(max)", nullable: false),

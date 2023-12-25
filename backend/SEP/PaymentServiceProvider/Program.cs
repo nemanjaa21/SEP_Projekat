@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using PaymentServiceProvider.Data;
 using PaymentServiceProvider.Interfaces;
 using PaymentServiceProvider.Mapping;
+using PaymentServiceProvider.RabbitMQ;
 using PaymentServiceProvider.Repository;
 using PaymentServiceProvider.Services;
 using System.Text;
@@ -19,6 +20,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPaymentService, PaymentServiceImpl>();
 builder.Services.AddScoped<IMerchantService, MerchantServiceImpl>();
+builder.Services.AddSingleton<IRabbitMqUtil, RabbitMqUtil>();
 
 builder.Services.AddSwaggerGen();
 
