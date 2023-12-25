@@ -16,10 +16,12 @@ import {
   qrCodePayment,
 } from "../../../services/PSPService.js";
 import { getServiceOfferById } from "../../../services/AgencyService.js";
+import { getAllPaymentServices } from "../../../services/AgencyService.js";
 
 const PSPDashboard = () => {
   const [serviceOffer, setServiceOffer] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState("");
+  const [paymentServices, setPaymentServices] = useState([]);
 
   useEffect(() => {
     const id = localStorage.getItem("serviceOfferId");
@@ -32,6 +34,17 @@ const PSPDashboard = () => {
       }
     };
 
+    const getPaymentServices = async () => {
+      try {
+        const response = await getAllPaymentServices(1);
+        setPaymentServices(response.data);
+      }
+      catch (error) {
+        console.error("Greška pri dohvatanju PaymentServices-a:", error);
+      }
+    }
+
+    getPaymentServices();
     getServiceOffer();
   }, []);
 
@@ -82,16 +95,16 @@ const PSPDashboard = () => {
   const handleRedirect = async () => {
     let paymentResult = '';
     switch (selectedPayment) {
-      case "Card":
+      case "Credit Card Payment":
         paymentResult = await getCardPayment();
         break;
-      case "Bitcoin":
+      case "Bitcoin Payment":
         paymentResult = await getBitcoinPayment();
         break;
-      case "QR Code":
+      case "QR Code Payment":
         paymentResult = await getQrServicePayment();
         break;
-      case "Paypal":
+      case "Paypal Payment":
         paymentResult = await getPayPalServicePayment();
         break;
       default:
@@ -151,10 +164,11 @@ const PSPDashboard = () => {
         fullWidth
         variant="outlined"
       >
-        <MenuItem value="Card">Card</MenuItem>
-        <MenuItem value="Paypal">Paypal</MenuItem>
-        <MenuItem value="Bitcoin">Bitcoin</MenuItem>
-        <MenuItem value="QR Code">QR Code</MenuItem>
+        {paymentServices.filter(service => service.subscribed).map(service => (
+          <MenuItem key={service.id} value={service.name}>
+            {service.name}
+          </MenuItem>
+        ))}
       </Select>
       <Button variant="contained" onClick={handleRedirect}>
         Continue on payment
