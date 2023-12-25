@@ -6,6 +6,7 @@ using System.Numerics;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Web3;
 using Nethereum.Util;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace BitcoinPaymentService.Services
 {
@@ -24,8 +25,9 @@ namespace BitcoinPaymentService.Services
         }
         public async Task CancelEthereumPayment(int merchantId)
         {
-            var transaction = await _unitOfWork.TransactionsRepository.Get(x => x.Id == merchantId ) ?? throw new Exception("No order");
-            _unitOfWork.DeleteTransaction(transaction);
+            var transaction = await _unitOfWork.TransactionsRepository.Get(x => x.Id == merchantId ) ?? throw new Exception("No merchant");
+            transaction.Status = Enums.Status.FAILED;
+            _unitOfWork.TransactionsRepository.Update(transaction);
             await _unitOfWork.Save();
         }
 
@@ -58,10 +60,11 @@ namespace BitcoinPaymentService.Services
             var user = await _unitOfWork.UsersRepository.Get(x => x.Id == userId);
 
             var merchant = await _unitOfWork.MerchantsRepository.Get(x => x.Id == merchantId )
-                ?? throw new Exception("Product doesn't exist");
+                ?? throw new Exception("Merchant doesn't exist");
 
             var transaction = await _transactionService.MakeTransaction(merchantId, userId);
             transaction.UniqueHash = new BigInteger(new Random().Next()).ToHex(true);
+            transaction.Status = Enums.Status.CREATED;
             _unitOfWork.TransactionsRepository.Update(transaction);
             await _unitOfWork.Save();
 
