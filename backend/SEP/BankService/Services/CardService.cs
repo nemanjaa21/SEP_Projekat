@@ -15,7 +15,7 @@ namespace BankService.Services
 
         public async Task<Card> CheckCardInfo(CardInfoDTO card)
         {
-            var verifiedCard = await _unitOfWork.CardsRepository.Get(c => c.Pan == card.Pan && c.CardHolderName == card.CardHolderName && c.SecurityCode == card.SecurityCode && c.ExpirationDate == card.ExpirationDate, new List<string>() { "Account" });
+            var verifiedCard = await _unitOfWork.CardsRepository.Get(c => c.Pan == card.Pan && c.SecurityCode == card.SecurityCode, new List<string>() { "Account" });
             if (verifiedCard == null)
                 throw new Exception("No card with given data was found.");
 
