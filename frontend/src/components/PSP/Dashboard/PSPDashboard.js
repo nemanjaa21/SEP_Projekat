@@ -12,12 +12,12 @@ import {
 } from "@mui/material";
 import NavBar from "../../NavBar/NavBar.js";
 import {
-  bitcoinPayment,
   payPalPayment,
   processPayment,
 } from "../../../services/PSPService.js";
 import { getServiceOfferById } from "../../../services/AgencyService.js";
 import { getAllPaymentServices } from "../../../services/AgencyService.js";
+import { createEthereumPayment } from "../../../services/CryptoService.js";
 
 const PSPDashboard = () => {
   const [serviceOffer, setServiceOffer] = useState(null);
@@ -66,7 +66,7 @@ const PSPDashboard = () => {
 
   const getBitcoinPayment = async () => {
     try {
-      const response = await bitcoinPayment();
+      const response = await createEthereumPayment(1);
       return response.data;
     } catch (error) {
       console.error("Greška pri bitcoin placanju:", error);

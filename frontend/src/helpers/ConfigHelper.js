@@ -35,6 +35,13 @@ const bankApi = axios.create({
     },
 })
 
+const bitcoinApi = axios.create({
+    baseURL: process.env.REACT_APP_BITCOIN_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+})
+
 authApi.interceptors.request.use((config) => { 
     try{ 
         const token = sessionStorage.getItem('token');
@@ -115,5 +122,21 @@ bankApi.interceptors.request.use((config) => {
         return Promise.reject(e); 
     } 
 });
- 
-export { authApi, agencyApi, pspApi, bankApi, paypalApi };
+
+bitcoinApi.interceptors.request.use((config) => { 
+    try{ 
+        const token = sessionStorage.getItem('token');
+        if(token){ 
+            return {...config, headers: { 
+                ...config.headers, 
+                Authorization: `Bearer ${token}`, 
+            }};
+        } 
+        return config; 
+    } catch(e) { 
+        console.log(e); 
+        return Promise.reject(e); 
+    } 
+});
+
+export { authApi, agencyApi, pspApi, bankApi, paypalApi, bitcoinApi };
