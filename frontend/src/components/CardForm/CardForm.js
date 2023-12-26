@@ -1,5 +1,12 @@
 import { useState } from 'react';
 import { payWithCard } from '../../services/BankService';
+import {
+  Container,
+  Button,
+  TextField,
+  Box
+} from "@mui/material";
+import NavBar from '../NavBar/NavBar';
 
 const CardForm = () => {
   const [formData, setFormData] = useState({
@@ -30,37 +37,58 @@ const CardForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="Pan"
-        value={formData.Pan}
-        placeholder="Card Number"
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="SecurityCode"
-        value={formData.SecurityCode}
-        placeholder="Security Code"
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="CardHolderName"
-        value={formData.CardHolderName}
-        placeholder="Cardholder's Name"
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="ExpirationDate"
-        value={formData.ExpirationDate}
-        placeholder="Expiration Date"
-        onChange={handleChange}
-      />
-      <button type="submit">Submit</button>
-    </form>
+    <>
+    <NavBar />
+      <Box sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh",
+                    backgroundColor: "#243b55",
+                }}>
+      <Container maxWidth="sm">
+      <form onSubmit={handleSubmit}>
+        <Box sx={{ '& .MuiTextField-root': { m: 1, width: '100%' } }}>
+          <TextField
+            type="text"
+            name="Pan"
+            value={formData.Pan}
+            label="Card Number"
+            placeholder="Card Number"
+            onChange={handleChange}
+          />
+          <TextField
+            type="text"
+            name="SecurityCode"
+            value={formData.SecurityCode}
+            label="Security Code"
+            placeholder="Security Code"
+            onChange={handleChange}
+          />
+          <TextField
+            type="text"
+            name="CardHolderName"
+            value={formData.CardHolderName}
+            label="Cardholder's Name"
+            placeholder="Cardholder's Name"
+            onChange={handleChange}
+          />
+          <TextField
+            type="text"
+            name="ExpirationDate"
+            value={formData.ExpirationDate}
+            label="Expiration Date"
+            placeholder="Expiration Date"
+            onChange={handleChange}
+          />
+        </Box>
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </form>
+    </Container>
+      </Box>
+    </>
   );
 };
 

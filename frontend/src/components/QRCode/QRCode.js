@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { generateQRCode, payWithQRCode } from "../../services/BankService";
+import { generateQRCode } from "../../services/BankService";
+import {
+  Container,
+  Box
+} from "@mui/material";
+import NavBar from "../NavBar/NavBar";
 
 const QRCode = () => {
   const [qrImage, setQRImage] = useState("");
@@ -8,7 +13,7 @@ const QRCode = () => {
     const paymentId = sessionStorage.getItem("PaymentId");
 
     const generateQRCodeDTO = {
-      MerchantId: 3,
+      MerchantId: 1,
       UserId: 1,
       Currency: 0,
       PaymentId: paymentId,
@@ -29,14 +34,27 @@ const QRCode = () => {
   }, []);
 
   return (
-    <div>
-      {qrImage && (
-        <div>
-          <h1>QR Code</h1>
-          <img src={qrImage} alt="QR Code" />
-        </div>
-      )}
-    </div>
+    <>
+    <NavBar />
+      <Box sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#243b55",
+      }}>
+        <Container maxWidth="sm">
+          <div>
+            {qrImage && (
+              <div>
+                <h1 style={{marginLeft: "126px"}}>QR Code</h1>
+                <img src={qrImage} alt="QR Code" style={{width: "400px", height: "400px"}}/>
+              </div>
+            )}
+          </div>
+        </Container>
+      </Box>
+    </>
   );
 };
 

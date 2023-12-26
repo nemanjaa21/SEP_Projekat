@@ -4,7 +4,7 @@
 
 namespace PaymentServiceProvider.Migrations
 {
-    public partial class merchantMigration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,12 +43,43 @@ namespace PaymentServiceProvider.Migrations
                 {
                     table.PrimaryKey("PK_Merchant", x => x.Id);
                 });
+
+            migrationBuilder.InsertData(
+                table: "PaymentServices",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 5, "Credit_Card_Payment" },
+                    { 6, "Bitcoin_Payment" },
+                    { 7, "QR_Code_Payment" },
+                    { 8, "PayPal_Payment" }
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Merchant");
+
+            migrationBuilder.DeleteData(
+                table: "PaymentServices",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "PaymentServices",
+                keyColumn: "Id",
+                keyValue: 6);
+
+            migrationBuilder.DeleteData(
+                table: "PaymentServices",
+                keyColumn: "Id",
+                keyValue: 7);
+
+            migrationBuilder.DeleteData(
+                table: "PaymentServices",
+                keyColumn: "Id",
+                keyValue: 8);
 
             migrationBuilder.InsertData(
                 table: "PaymentServices",

@@ -1,4 +1,4 @@
-import { pspApi, pspGatewayApi, paypalApi } from "../helpers/ConfigHelper";
+import { pspApi, paypalApi } from "../helpers/ConfigHelper";
 
 export const creditCardPayment = async () => {
   return await pspApi.get(`/card-payment`);

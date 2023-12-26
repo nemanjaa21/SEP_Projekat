@@ -9,12 +9,12 @@
             if(queueName.Equals("Credit_Card_Payment"))
             {
                 PaymentUrl = "http://localhost:3000/bank/card";
-                PaymentId = "5b708c40-3a20-47aa-8fff-4b5640062784";
+                PaymentId = "724513e7-4e11-419a-964e-58957cb85334";
             }
             else
             {
                 PaymentUrl = "http://localhost:3000/bank/qrcode";
-                PaymentId = "4f209d87-4496-43a3-8253-4195dc141d4e";
+                PaymentId = "eac7d64e-e4c0-455a-9b79-60ef83275886";
             }
         }
         public PaymentResponse(string? paymentUrl, string? paymentId)

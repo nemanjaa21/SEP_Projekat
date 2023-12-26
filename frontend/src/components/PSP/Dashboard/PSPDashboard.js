@@ -103,6 +103,7 @@ const PSPDashboard = () => {
   };
 
   const handleRedirect = async () => {
+
     switch (selectedPayment) {
       case "Credit Card Payment":
         await getCardPayment();
@@ -114,7 +115,7 @@ const PSPDashboard = () => {
         await getQrServicePayment();
         break;
       case "PayPal Payment":
-        paymentResult = await getPayPalServicePayment();
+        await getPayPalServicePayment();
         break;
       default:
         break;

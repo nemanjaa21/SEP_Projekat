@@ -11,8 +11,8 @@ using PaymentServiceProvider.Data;
 namespace PaymentServiceProvider.Migrations
 {
     [DbContext(typeof(PaymentServiceDbContext))]
-    [Migration("20231224230246_merchantMigration")]
-    partial class merchantMigration
+    [Migration("20231226002737_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,28 @@ namespace PaymentServiceProvider.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentServices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 5,
+                            Name = "Credit_Card_Payment"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Bitcoin_Payment"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "QR_Code_Payment"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "PayPal_Payment"
+                        });
                 });
 #pragma warning restore 612, 618
         }

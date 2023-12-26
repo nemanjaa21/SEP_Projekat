@@ -26,7 +26,7 @@ namespace PayPalPaymentService.Controllers
         public async Task<IActionResult> ConfirmPayPalPayment(int id, string paymentId, string token, string PayerID)
         {
             var result = await _payPalPaymentService.SuccessPayPalPayment(paymentId, PayerID, id);
-            return Redirect("http://localhost:3000");
+            return Redirect("http://localhost:3000/bank/success");
         }
 
         [HttpGet("payment/cancel/{id}")]

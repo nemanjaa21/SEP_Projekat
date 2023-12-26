@@ -63,6 +63,28 @@ namespace PaymentServiceProvider.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentServices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 5,
+                            Name = "Credit_Card_Payment"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Bitcoin_Payment"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "QR_Code_Payment"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "PayPal_Payment"
+                        });
                 });
 #pragma warning restore 612, 618
         }
