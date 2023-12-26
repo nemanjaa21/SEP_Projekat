@@ -106,7 +106,7 @@ namespace BankService.Controllers
         }
 
         [HttpPost("pay-with-qr-code")]
-        public async Task<IActionResult> PayWithQRCode([FromBody] QRCodeDataDTO QRCodeDataDTO)
+        public async Task<IActionResult> PayWithQRCode([FromQuery]QRCodeDataDTO QRCodeDataDTO)
         {
             PSPResponseDTO responseDTO;
 
@@ -150,10 +150,24 @@ namespace BankService.Controllers
 
             var merchant = await _merchantService.GetByMerchantId(generateQRCodeDTO.MerchantId);
 
-            string qrText = $"Merchant Full Name: {merchant.FullName}\nMerchant Account: {accountMerchant}\nUser ID: {generateQRCodeDTO.UserId}\nUser Account: {accountUser}\nCurrency: {GetCurrencyString(generateQRCodeDTO.Currency)}\n PaymentID:{generateQRCodeDTO.PaymentId}";
+            var qrCodeData = new QRCodeDataDTO
+            {
+                Currency = generateQRCodeDTO.Currency,
+                MerchantAccount = accountMerchant, 
+                UserId = generateQRCodeDTO.UserId,
+                UserAccount = accountUser, 
+                PaymentId = generateQRCodeDTO.PaymentId
+            };
+
+            string qrText = $"https://localhost:7172/api/Banks/pay-with-qr-code?";
+            qrText += $"Currency={(int)qrCodeData.Currency}&";
+            qrText += $"MerchantAccount={qrCodeData.MerchantAccount}&";
+            qrText += $"UserId={qrCodeData.UserId}&";
+            qrText += $"UserAccount={qrCodeData.UserAccount}&";
+            qrText += $"PaymentId={qrCodeData.PaymentId}";
 
             var qrCodeImage = GenerateQRCodeImage(qrText);
-            return Ok(new { ImageBase64 = qrCodeImage });
+            return Ok(new { ImageBase64 = qrCodeImage} );
         }
 
         private string GenerateQRCodeImage(string qrText)

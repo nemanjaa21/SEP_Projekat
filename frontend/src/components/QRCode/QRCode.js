@@ -10,7 +10,7 @@ const QRCode = () => {
   const [qrImage, setQRImage] = useState("");
 
   useEffect(() => {
-    const paymentId = sessionStorage.getItem("PaymentId");
+    const paymentId = sessionStorage.getItem("paymentId");
 
     const generateQRCodeDTO = {
       MerchantId: 1,
