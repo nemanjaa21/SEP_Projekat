@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PayPalPaymentService.Dto;
 using PayPalPaymentService.Interfaces;
 
 namespace PayPalPaymentService.Controllers
@@ -14,11 +15,26 @@ namespace PayPalPaymentService.Controllers
             _payPalPaymentService = payPalPaymentService;
         }
 
-        [HttpGet("payment")]
-        public async Task<IActionResult> MakePayment()
+        [HttpPost("payment")]
+        public async Task<IActionResult> MakePayment(ServiceOfferDto offerDto)
         {
-            string retVal = await _payPalPaymentService.MakePayment();
+            string retVal = await _payPalPaymentService.MakePayment(offerDto);
             return Ok(retVal);
+        }
+
+        [HttpGet("payment/success/{id}")]
+        public async Task<IActionResult> ConfirmPayPalPayment(int id, string paymentId, string token, string PayerID)
+        {
+            var result = await _payPalPaymentService.SuccessPayPalPayment(paymentId, PayerID, id);
+            return Redirect("http://localhost:3000");
+        }
+
+        [HttpGet("payment/cancel/{id}")]
+        public async Task<IActionResult> CancelPayPalPayment(int id)
+        {
+
+            //await _payPalPaymentService.CancelPayPalPayment(id);
+            return Redirect("http://localhost:3000");
         }
     }
 }

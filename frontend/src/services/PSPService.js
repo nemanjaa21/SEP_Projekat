@@ -1,4 +1,4 @@
-import { pspApi } from "../helpers/ConfigHelper";
+import { pspApi, pspGatewayApi, paypalApi } from "../helpers/ConfigHelper";
 
 export const creditCardPayment = async () => {
   return await pspApi.get(`/card-payment`);
@@ -12,8 +12,8 @@ export const qrCodePayment = async () => {
   return await pspApi.get(`/qrcode-payment`);
 };
 
-export const payPalPayment = async () => {
-  return await pspApi.get(`/paypal-payment`);
+export const payPalPayment = async (serviceOffer) => {
+  return await paypalApi.post(`/PayPalPayment/payment`, serviceOffer);
 };
 
 export const processPayment = async (pspRequest, apiKey) => {

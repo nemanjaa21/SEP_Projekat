@@ -21,6 +21,13 @@ const pspApi = axios.create({
     },
 });
 
+const paypalApi = axios.create({
+    baseURL: "https://localhost:7140/api",
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
 const bankApi = axios.create({
     baseURL: process.env.REACT_APP_BANK_URL,
     headers: {
@@ -76,7 +83,24 @@ pspApi.interceptors.request.use((config) => {
     } 
 }); 
 
+paypalApi.interceptors.request.use((config) => { 
+    try{ 
+        const token = sessionStorage.getItem('token');
+        if(token){ 
+            return {...config, headers: { 
+                ...config.headers, 
+                Authorization: `Bearer ${token}`, 
+            }};
+        } 
+        return config; 
+    } catch(e) { 
+        console.log(e); 
+        return Promise.reject(e); 
+    } 
+}); 
+
 bankApi.interceptors.request.use((config) => { 
+
     try{ 
         const token = sessionStorage.getItem('token');
         if(token){ 
@@ -91,6 +115,5 @@ bankApi.interceptors.request.use((config) => {
         return Promise.reject(e); 
     } 
 });
-
  
-export { authApi, agencyApi, pspApi, bankApi};
+export { authApi, agencyApi, pspApi, bankApi, paypalApi };
