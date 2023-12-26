@@ -1,5 +1,4 @@
-using QRCodePaymentService.Interfaces;
-using QRCodePaymentService.Services;
+using QRCodePaymentService.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +8,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IQRCodePaymentService, QRCodePaymentServiceImpl>();
+builder.Services.AddSingleton<IRabbitMqUtil, RabbitMqUtil>()
+    .AddHostedService<RabbitMqService>();
 
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 

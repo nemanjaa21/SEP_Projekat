@@ -150,13 +150,13 @@ namespace BankService.Controllers
 
             var merchant = await _merchantService.GetByMerchantId(generateQRCodeDTO.MerchantId);
 
-            string qrText = $"Merchant Full Name: {merchant.FullName}\nMerchant Account: {accountMerchant}\nUser ID: {generateQRCodeDTO.UserId}\nUser Account: {accountUser}\nAmount: {generateQRCodeDTO.Amount}\nCurrency: {GetCurrencyString(generateQRCodeDTO.Currency)}\n PaymentID:{generateQRCodeDTO.PaymentId}";
+            string qrText = $"Merchant Full Name: {merchant.FullName}\nMerchant Account: {accountMerchant}\nUser ID: {generateQRCodeDTO.UserId}\nUser Account: {accountUser}\nCurrency: {GetCurrencyString(generateQRCodeDTO.Currency)}\n PaymentID:{generateQRCodeDTO.PaymentId}";
 
             var qrCodeImage = GenerateQRCodeImage(qrText);
-            return File(qrCodeImage, "image/png");
+            return Ok(new { ImageBase64 = qrCodeImage });
         }
 
-        private byte[] GenerateQRCodeImage(string qrText)
+        private string GenerateQRCodeImage(string qrText)
         {
             QRCodeGenerator qr = new QRCodeGenerator();
             QRCodeData data = qr.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
@@ -166,7 +166,7 @@ namespace BankService.Controllers
             {
                 Bitmap qrCodeImage = qrCode.GetGraphic(20);
                 qrCodeImage.Save(ms, ImageFormat.Png);
-                return ms.ToArray();
+                return Convert.ToBase64String(ms.ToArray());
             }
         }
 

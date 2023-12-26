@@ -53,7 +53,7 @@ namespace PaymentServiceProvider.Services
 
             await _rabbitMqUtil.PublishMessageQueue(paymentType.Name!, eventData);
 
-            PaymentResponse paymentResponse = await _rabbitMqUtil.ListenMessageQueue();
+            PaymentResponse paymentResponse = await _rabbitMqUtil.ListenMessageQueue(paymentType.Name!);
             return paymentResponse;
         }
     }

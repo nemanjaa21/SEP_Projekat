@@ -24,7 +24,7 @@ namespace PaymentServiceProvider.RabbitMQ
 
             await Task.CompletedTask;
         }
-        public async Task<PaymentResponse> ListenMessageQueue()
+        public async Task<PaymentResponse> ListenMessageQueue(string queueName)
         {
             var factory = new ConnectionFactory()
             {
@@ -35,7 +35,7 @@ namespace PaymentServiceProvider.RabbitMQ
 
             var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
-            var paymentResponse = new PaymentResponse();
+            var paymentResponse = new PaymentResponse(queueName);
 
             var consumer = new AsyncEventingBasicConsumer(channel);
 
@@ -45,7 +45,7 @@ namespace PaymentServiceProvider.RabbitMQ
                 paymentResponse = JsonConvert.DeserializeObject<PaymentResponse>(body);
             };
 
-            channel.BasicConsume(queue: "Credit_Card_Return", autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
 
             await Task.CompletedTask;
 

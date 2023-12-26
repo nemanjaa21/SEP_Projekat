@@ -13,7 +13,6 @@ import {
   bitcoinPayment,
   payPalPayment,
   processPayment,
-  qrCodePayment,
 } from "../../../services/PSPService.js";
 import { getServiceOfferById } from "../../../services/AgencyService.js";
 import { getAllPaymentServices } from "../../../services/AgencyService.js";
@@ -74,8 +73,14 @@ const PSPDashboard = () => {
 
   const getQrServicePayment = async () => {
     try {
-      const response = await qrCodePayment();
-      return response.data;
+      let pspRequest = {
+        amount: serviceOffer.totalPrice.toFixed(2),
+        paymentTypeId: 7
+      }
+      const response = await processPayment(pspRequest, process.env.REACT_APP_MERCHANT_API_KEY);
+      console.log(response);
+      sessionStorage.setItem("paymentId", response.data.paymentId);
+      window.location.href = response.data.paymentUrl;
     } catch (error) {
       console.error("Greška pri QR placanju:", error);
     }

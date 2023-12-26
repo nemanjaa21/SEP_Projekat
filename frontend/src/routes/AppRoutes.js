@@ -8,6 +8,7 @@ import ServiceOfferItem from "../components/Agency/ServiceOfferItem/ServiceOffer
 import PaymentServices from "../components/Agency/PaymentServices/PaymentServices.js";
 import CardForm from "../components/CardForm/CardForm.js";
 import BankSuccess from "../components/Bank/BankSuccess.js";
+import QRCode from "../components/QRCode/QRCode.js";
 
 const AppRoutes = () => {
     const authCtx = useContext(AuthContext);
@@ -21,6 +22,7 @@ const AppRoutes = () => {
         <Route path="/pspDashboard" element={<PSPDashboard />} />
         <Route path="/bank/card" element={<CardForm />} />
         <Route path="/bank/success" element={<BankSuccess />} />
+        <Route path="/bank/qrcode" element={<QRCode />} />
       </Routes>
     );
   };
