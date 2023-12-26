@@ -21,21 +21,19 @@ const pspApi = axios.create({
     },
 });
 
-const pspGatewayApi = axios.create({
-    baseURL: process.env.REACT_APP_PSP_GATEWAY_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-
-
 const paypalApi = axios.create({
     baseURL: "https://localhost:7140/api",
     headers: {
         'Content-Type': 'application/json',
     },
 });
+
+const bankApi = axios.create({
+    baseURL: process.env.REACT_APP_BANK_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+})
 
 authApi.interceptors.request.use((config) => { 
     try{ 
@@ -101,7 +99,8 @@ paypalApi.interceptors.request.use((config) => {
     } 
 }); 
 
-pspGatewayApi.interceptors.request.use((config) => { 
+bankApi.interceptors.request.use((config) => { 
+
     try{ 
         const token = sessionStorage.getItem('token');
         if(token){ 
@@ -117,4 +116,4 @@ pspGatewayApi.interceptors.request.use((config) => {
     } 
 });
  
-export { authApi, agencyApi, pspApi, pspGatewayApi, paypalApi };
+export { authApi, agencyApi, pspApi, bankApi, paypalApi };

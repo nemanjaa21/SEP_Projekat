@@ -44,10 +44,10 @@ namespace BankService.Controllers
                 {
                     Card? card = await _cardService.CheckCardInfo(cardInfoDTO);
 
-                    if (await _accountService.WithdrawMoney(card.Account!.UserId, transaction.Amount))
+                    if (await _accountService.WithdrawMoney(card.Account!.UserId!.Value, transaction.Amount))
                     {
                         await _accountService.DepositMoney(transaction.IdMerchant, transaction.Amount);
-                        responseDTO = await _banksService.SendToPSP(card.Account!.UserId, transaction);
+                        responseDTO = await _banksService.SendToPSP(card.Account!.UserId!.Value, transaction);
                         return Ok(responseDTO);
                     }
                     else
@@ -59,9 +59,8 @@ namespace BankService.Controllers
                 else
                 {
                     PCCResponseDTO response = await _banksService.SendToPCC(cardInfoDTO, transaction);
-                    var acquirerId = await _accountService.GetAccountId(response.AcquirerAccountNumber!);
 
-                    if (await _accountService.DepositMoney(acquirerId, transaction.Amount))
+                    if (await _accountService.DepositMoneyViaAccount(response.AcquirerAccountNumber!, transaction.Amount))
                     {
                         responseDTO = await _banksService.SendToPSPFromPCC(response);
                         return Ok(responseDTO);
@@ -96,14 +95,11 @@ namespace BankService.Controllers
             };
             PCCResponseDTO responseDTO = new PCCResponseDTO();
 
-            if (_banksService.IsSameBank(pccRequestDTO.Pan!))
+            Card? card = await _cardService.CheckCardInfo(cardInfo);
+            if (await _accountService.WithdrawMoney(card.Account!.UserId!.Value, pccRequestDTO.Amount))
             {
-                Card? card = await _cardService.CheckCardInfo(cardInfo);
-                if (await _accountService.WithdrawMoney(card.Account!.UserId, pccRequestDTO.Amount))
-                {
-                    responseDTO = await _banksService.ResendToPCC(pccRequestDTO, card.Account!.AccountNumber!, card.Account!.UserId);
-                    return Ok(responseDTO);
-                }
+                responseDTO = await _banksService.ResendToPCC(pccRequestDTO, card.Account!.AccountNumber!, card.Account!.UserId!.Value);
+                return Ok(responseDTO);
             }
 
             return BadRequest(responseDTO);

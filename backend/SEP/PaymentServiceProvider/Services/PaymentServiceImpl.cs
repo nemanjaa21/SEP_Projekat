@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using Ocelot.RequestId;
 using PaymentServiceProvider.Interfaces;
 using PaymentServiceProvider.Models;
+using PaymentServiceProvider.RabbitMQ;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using shared;
@@ -12,12 +14,14 @@ namespace PaymentServiceProvider.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMerchantService _merchantService;
+        private IRabbitMqUtil _rabbitMqUtil;
         HttpClient _httpClient;
 
-        public PaymentServiceImpl(IUnitOfWork unitOfWork, IMerchantService merchantService) 
+        public PaymentServiceImpl(IUnitOfWork unitOfWork, IMerchantService merchantService, IRabbitMqUtil rabbitMqUtil) 
         { 
             _unitOfWork = unitOfWork;
             _merchantService = merchantService;
+            _rabbitMqUtil = rabbitMqUtil;
             _httpClient = new HttpClient();
         }
 
@@ -45,53 +49,12 @@ namespace PaymentServiceProvider.Services
 
             PaymentRequest paymentRequest = new PaymentRequest(merchant.MerchantId, merchant.MerchantPassword, pspRequest.Amount, merchantOrderId, DateTime.Now, "SUCCESS_URL", "FAIL_URL", "ERROR_URL");
 
-            PaymentResponse? response = SendPaymentRequestAndGetResponse(paymentRequest, paymentType.Name!);
+            var eventData = JsonConvert.SerializeObject(paymentRequest);
 
-            return response!;
-        }
+            await _rabbitMqUtil.PublishMessageQueue(paymentType.Name!, eventData);
 
-        private PaymentResponse SendPaymentRequestAndGetResponse(PaymentRequest request, string paymentTypeName)
-        {
-            ConnectionFactory factory = new ConnectionFactory() { HostName = "localhost" };
-            IConnection connection = factory.CreateConnection();
-            IModel channel = connection.CreateModel();
-
-            channel.QueueDeclare(queue: paymentTypeName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            var replyQueueName = channel.QueueDeclare().QueueName;
-
-            var consumer = new EventingBasicConsumer(channel);
-            var correlationId = Guid.NewGuid().ToString();
-
-            var props = channel.CreateBasicProperties();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
-
-            var message = JsonConvert.SerializeObject(request);
-            var body = Encoding.UTF8.GetBytes(message);
-
-            channel.BasicPublish(exchange: "",
-                             routingKey: paymentTypeName,
-                             basicProperties: props,
-                             body: body);
-
-            PaymentResponse? response = null;
-            var responseEvent = new ManualResetEvent(false);
-
-            consumer.Received += (model, ea) =>
-            {
-                if (ea.BasicProperties.CorrelationId == correlationId)
-                {
-                    var responseMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    response = JsonConvert.DeserializeObject<PaymentResponse>(responseMessage);
-                    responseEvent.Set();
-                }
-            };
-
-            channel.BasicConsume(queue: replyQueueName, autoAck: true, consumer: consumer);
-
-            responseEvent.WaitOne();
-
-            return response!;
+            PaymentResponse paymentResponse = await _rabbitMqUtil.ListenMessageQueue();
+            return paymentResponse;
         }
     }
 }

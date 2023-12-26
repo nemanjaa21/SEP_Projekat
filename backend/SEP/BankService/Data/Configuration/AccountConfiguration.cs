@@ -17,11 +17,13 @@ namespace BankService.Data.Configuration
 
             builder.HasOne(x => x.User)
                    .WithMany(u => u.Accounts)
-                   .HasForeignKey(x => x.UserId);
+                   .HasForeignKey(x => x.UserId)
+                   .IsRequired(false);
 
             builder.HasOne(x => x.Merchant)
                    .WithMany(a => a.Accounts)
-                   .HasForeignKey(x => x.MerchantId);
+                   .HasForeignKey(x => x.MerchantId)
+                   .IsRequired(false);
         }
     }
 }

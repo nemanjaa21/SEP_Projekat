@@ -10,7 +10,7 @@ namespace BankService.Data.Configuration
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.FullName);
-            builder.Property(x => x.Merchant_Id).IsRequired();
+            builder.Property(x => x.MerchantId).IsRequired();
             builder.Property(x => x.MerchantPassword).IsRequired();
         }
     }

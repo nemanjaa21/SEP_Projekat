@@ -23,7 +23,7 @@ namespace BankService.Services
 
         public async Task<Merchant> GetByMerchantId(string id)
         {
-            var merchant = await _unitOfWork.MerchantsRepository.Get(m => m.Merchant_Id == id);
+            var merchant = await _unitOfWork.MerchantsRepository.Get(m => m.MerchantId == id);
             if (merchant == null)
                 throw new Exception($"Merchant with {id} not found!");
 

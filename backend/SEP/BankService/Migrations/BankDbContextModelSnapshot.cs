@@ -34,19 +34,19 @@ namespace BankService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Balance")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("MerchantId")
+                    b.Property<int?>("MerchantId")
                         .HasColumnType("int");
 
                     b.Property<string>("Merchant_Id")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Reserved")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Reserved")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -77,7 +77,7 @@ namespace BankService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PAN")
+                    b.Property<string>("Pan")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -100,11 +100,17 @@ namespace BankService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("MerchantPassword")
+                    b.Property<string>("ApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MerchantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Merchant_Id")
+                    b.Property<string>("MerchantPassword")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -122,37 +128,34 @@ namespace BankService.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AcquirerAccountNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("AcquirerOrderId")
+                    b.Property<long?>("AcquirerOrderId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("AcquirerTimestamp")
+                    b.Property<DateTime?>("AcquirerTimestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("IdMerchant")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdUser")
+                    b.Property<int?>("IdUser")
                         .HasColumnType("int");
 
                     b.Property<string>("IssuerAccountNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("IssuerOrderId")
+                    b.Property<long?>("IssuerOrderId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("IssuerTimestamp")
+                    b.Property<DateTime?>("IssuerTimestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MerchantOrderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("MerchantOrderId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("MerchantTimestamp")
                         .HasColumnType("datetime2");
@@ -206,15 +209,11 @@ namespace BankService.Migrations
                 {
                     b.HasOne("BankService.Models.Merchant", "Merchant")
                         .WithMany("Accounts")
-                        .HasForeignKey("MerchantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MerchantId");
 
                     b.HasOne("BankService.Models.User", "User")
                         .WithMany("Accounts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Merchant");
 
@@ -242,9 +241,7 @@ namespace BankService.Migrations
 
                     b.HasOne("BankService.Models.User", "User")
                         .WithMany("Transactions")
-                        .HasForeignKey("IdUser")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdUser");
 
                     b.Navigation("Merchant");
 

@@ -57,7 +57,9 @@ const PSPDashboard = () => {
         paymentTypeId: 5
       }
       const response = await processPayment(pspRequest, process.env.REACT_APP_MERCHANT_API_KEY);
-      return response.data;
+      console.log(response);
+      sessionStorage.setItem("paymentId", response.data.paymentId);
+      window.location.href = response.data.paymentUrl;
     } catch (error) {
       console.error("Greška pri placanju karticom:", error);
     }
@@ -96,16 +98,15 @@ const PSPDashboard = () => {
   };
 
   const handleRedirect = async () => {
-    let paymentResult = '';
     switch (selectedPayment) {
       case "Credit Card Payment":
-        paymentResult = await getCardPayment();
+        await getCardPayment();
         break;
       case "Bitcoin Payment":
-        paymentResult = await getBitcoinPayment();
+        await getBitcoinPayment();
         break;
       case "QR Code Payment":
-        paymentResult = await getQrServicePayment();
+        await getQrServicePayment();
         break;
       case "PayPal Payment":
         paymentResult = await getPayPalServicePayment();
