@@ -26,10 +26,8 @@ namespace BitcoinPaymentService.Controllers
         [HttpPost("ethereum/create/{id}")]
         public async Task<IActionResult> CreateEthereumPayment(int id)
         {
-            if (!int.TryParse(User.Claims.First(c => c.Type == "Id").Value, out int userId))
-                throw new Exception("Bad ID. Logout and login.");
-
-            var response = await _bitcoinPaymentService.CreateEthereumPayment(id, userId);
+            //int userId = int.Parse(User.Claims.First(c => c.Type == "Id").Value);
+            var response = await _bitcoinPaymentService.CreateEthereumPayment(id, 3);
             return Ok(response);
         }
 

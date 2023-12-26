@@ -1,11 +1,6 @@
 import { toast } from "react-toastify";
-import { bitcoinPayment } from "services/PSPService";
 import Web3 from "web3";
-
-export const getImageLink = (imageName) => {
-    if (imageName) return process.env.REACT_APP_AUTH_URL + "/user/image/" + imageName;
-    return "default.jpg";
-  };
+import { bitcoinApi } from "../helpers/ConfigHelper";
 
 export const createEthereumPayment = async (id) => {
     let orderId = -1;
@@ -24,7 +19,7 @@ export const createEthereumPayment = async (id) => {
         return;
       }
   
-      const transactionData = await api.post(`/payment/ethereum/create/${id}`);
+      const transactionData = await bitcoinApi.post(`/BitcoinPayment/ethereum/create/${id}`);
       orderId = transactionData.data.orderId;
       const response = await web3.eth.sendTransaction({
         from: accs[0],
@@ -36,14 +31,14 @@ export const createEthereumPayment = async (id) => {
         return;
       }
   
-      await api.get(`/payment/ethereum/check/${response.transactionHash}`);
+      await bitcoinApi.get(`/BitcoinPayment/ethereum/check/${response.transactionHash}`);
       toast.success("Payment is successful");
       setTimeout(() => {
         window.location.reload();
       }, 2000);
     } catch (e) {
       console.log(e);
-      if (orderId !== -1) await api.get(`/payment/ethereum/cancel/${orderId}`);
+      if (orderId !== -1) await bitcoinApi.get(`/BitcoinPayment/ethereum/cancel/${orderId}`);
       toast.error("Please connect to MetaMask and try again");
     }
   };

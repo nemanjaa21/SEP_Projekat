@@ -9,9 +9,14 @@ namespace BitcoinPaymentService.Data.Configuration
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Name).IsRequired();
-            builder.Property(x => x.Surname).IsRequired();
-            builder.Property(x => x.Address).IsRequired();
+            builder.Property(x => x.Email).IsRequired();
+            builder.Property(x=> x.EthereumAddress);
+
+            builder.HasData(new User()
+            {
+                Id = 3,
+                Email = "malina@gmail.com",
+            });
         }
     }
 }
