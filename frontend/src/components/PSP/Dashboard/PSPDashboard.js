@@ -8,7 +8,9 @@ import {
   MenuItem,
   Button,
   TextField,
+  Box
 } from "@mui/material";
+import NavBar from "../../NavBar/NavBar.js";
 import {
   bitcoinPayment,
   payPalPayment,
@@ -82,12 +84,13 @@ const PSPDashboard = () => {
   };
 
   const getPayPalServicePayment = async () => {
-    try {
-      const response = await payPalPayment();
-      return response.data;
-    } catch (error) {
-      console.error("Greška pri PayPal placanju:", error);
-    }
+      try {
+         const response = await payPalPayment(serviceOffer);
+         window.location.replace(response.data); 
+      }
+      catch(error) {
+          console.log("Error processing PaypalPayment: ", error);
+      }
   };
 
   const handlePaymentChange = (event) => {
@@ -105,8 +108,8 @@ const PSPDashboard = () => {
       case "QR Code Payment":
         await getQrServicePayment();
         break;
-      case "Paypal Payment":
-        await getPayPalServicePayment();
+      case "PayPal Payment":
+        paymentResult = await getPayPalServicePayment();
         break;
       default:
         break;
@@ -128,7 +131,16 @@ const PSPDashboard = () => {
   }
 
   return (
-    <Container maxWidth="sm">
+    <>
+    <NavBar />
+      <Box sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh",
+                    backgroundColor: "#243b55",
+                }}>
+      <Container maxWidth="sm">
       <Typography variant="h4" align="center" gutterBottom>
         Offer review
       </Typography>
@@ -175,6 +187,8 @@ const PSPDashboard = () => {
         Continue on payment
       </Button>
     </Container>
+      </Box>
+    </>
   );
 };
 
