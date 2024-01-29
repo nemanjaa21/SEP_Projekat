@@ -1,4 +1,5 @@
-﻿using BankService.DTO;
+﻿using AutoMapper;
+using BankService.DTO;
 using BankService.Enums;
 using BankService.Interfaces;
 using BankService.Models;
@@ -184,16 +185,6 @@ namespace BankService.Controllers
             }
         }
 
-        private string GetCurrencyString(Currency currency)
-        {
-            if (currency == Currency.USD)
-                return "USD";
-            else if (currency == Currency.EUR)
-                return "EUR";
-            else
-                return "RSD";
-        }
-
         private decimal ConvertToUSD(Currency currency, decimal amount)
         {
             if (currency == Currency.USD)
@@ -203,5 +194,13 @@ namespace BankService.Controllers
             else
                 return amount * (decimal)0.0094;
         }
+
+        [HttpPost("add-new-card")]
+        public async Task<IActionResult> AddNewCard(NewCardDTO newCardDTO)
+        {
+            await _cardService.AddNewCard(newCardDTO);
+            return Ok(newCardDTO);
+        }
+
     }
 }

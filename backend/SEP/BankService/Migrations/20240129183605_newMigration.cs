@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BankService.Migrations
 {
-    public partial class initMigration : Migration
+    public partial class newMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -77,17 +77,17 @@ namespace BankService.Migrations
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MerchantOrderId = table.Column<long>(type: "bigint", nullable: false),
                     MerchantTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AcquirerOrderId = table.Column<long>(type: "bigint", nullable: false),
-                    AcquirerTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IssuerOrderId = table.Column<long>(type: "bigint", nullable: false),
-                    IssuerTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AcquirerOrderId = table.Column<long>(type: "bigint", nullable: true),
+                    AcquirerTimestamp = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IssuerOrderId = table.Column<long>(type: "bigint", nullable: true),
+                    IssuerTimestamp = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AcquirerAccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IssuerAccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AcquirerAccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IssuerAccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Merchant_Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdMerchant = table.Column<int>(type: "int", nullable: false),
-                    IdUser = table.Column<int>(type: "int", nullable: false)
+                    IdUser = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,8 +102,7 @@ namespace BankService.Migrations
                         name: "FK_Transaction_User_IdUser",
                         column: x => x.IdUser,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -112,8 +111,8 @@ namespace BankService.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Pan = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SecurityCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pan = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    SecurityCode = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     CardHolderName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpirationDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false)
