@@ -5,6 +5,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using Shared;
 
 namespace AgencyService.Controllers
 {
@@ -26,9 +28,8 @@ namespace AgencyService.Controllers
         [HttpGet("get-all-service-offer-item")]
         public async Task<IActionResult> GetAllServiceOfferItem()
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[GetAllServiceOfferItem] [User: {user}] - Function is called.");
 
@@ -44,9 +45,8 @@ namespace AgencyService.Controllers
         [HttpGet("get-service-offer-item/{id}")]
         public async Task<IActionResult> GetServiceOfferItem(int id)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[GetServiceOfferItem] [User: {user}] - Function is called.");
 
@@ -67,9 +67,8 @@ namespace AgencyService.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateServiceOfferItem(CreateServiceOfferItemDto serviceOfferItemDto, int agencyId)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[CreateServiceOfferItem] [User: {user}] - Function is called.");
 

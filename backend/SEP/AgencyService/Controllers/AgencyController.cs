@@ -4,6 +4,7 @@ using AgencyService.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 
 namespace AgencyService.Controllers
 {
@@ -25,9 +26,8 @@ namespace AgencyService.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAgencyById(int id)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[GetAgencyById] [User: {user}] - Function is called.");
 

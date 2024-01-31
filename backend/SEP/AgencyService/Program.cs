@@ -38,7 +38,7 @@ var mapperConfig = new MapperConfiguration(mc =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-var _logger = new LoggerConfiguration().WriteTo.File("C:\\Users\\Zdravko\\Desktop\\SEP_Projekat\\Logs\\logs.log", rollingInterval: RollingInterval.Day).CreateLogger();
+var _logger = new LoggerConfiguration().WriteTo.File("C:\\Users\\Dejan\\Desktop\\SEP_Projekat\\backend\\Logs\\log.log", rollingInterval: RollingInterval.Day).CreateLogger();
 builder.Logging.AddSerilog(_logger);
 
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));

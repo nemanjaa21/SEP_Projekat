@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ocelot.Errors;
+using Shared;
 
 namespace AgencyService.Controllers
 {
@@ -28,9 +29,8 @@ namespace AgencyService.Controllers
         [HttpGet("get-payment-services/{id}")]
         public async Task<IActionResult> GetAll(int id)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[GetAll] [User: {user}] - Function is called.");
 
@@ -48,9 +48,8 @@ namespace AgencyService.Controllers
         [HttpPost("create-payment-service")]
         public async Task<IActionResult> CreatePaymentService(CreatePaymentServiceDto paymentServiceDto, int agencyId)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[CreatePaymentService] [User: {user}] - Function is called.");
 
@@ -71,9 +70,8 @@ namespace AgencyService.Controllers
         [HttpPut("subscribe-payment-service")]
         public async Task<IActionResult> SubscribePaymentService([FromBody] List<PaymentServiceDto> paymentServicesDto, int agencyId)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[SubscribePaymentService] [User: {user}] - Function is called.");
 

@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Shared;
 
 namespace AgencyService.Controllers
 {
@@ -26,9 +27,8 @@ namespace AgencyService.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetServiceOffer(int id)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[GetServiceOffer] [User: {user}] - Function is called.");
 
@@ -47,9 +47,8 @@ namespace AgencyService.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateServiceOffer(Dictionary<int, bool> ids)
         {
-            var user = User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-            if (user == null) { user = "unknown"; }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            var authorizationHeader = Request.Headers["Authorization"].ToString();
+            var user = JwtDecode.DecodeToken(authorizationHeader);
 
             _logger.LogInformation($"[CreateServiceOffer] [User: {user}] - Function is called.");
 
