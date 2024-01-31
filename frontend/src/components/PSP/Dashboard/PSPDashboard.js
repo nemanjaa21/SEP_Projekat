@@ -55,7 +55,7 @@ const PSPDashboard = () => {
         amount: serviceOffer.totalPrice.toFixed(2),
         paymentTypeId: 5
       }
-      const response = await processPayment(pspRequest, process.env.REACT_APP_MERCHANT_API_KEY);
+      const response = await processPayment(pspRequest, btoa(process.env.REACT_APP_MERCHANT_API_KEY));
       console.log(response);
       sessionStorage.setItem("paymentId", response.data.paymentId);
       window.location.href = response.data.paymentUrl;
@@ -79,7 +79,7 @@ const PSPDashboard = () => {
         amount: serviceOffer.totalPrice.toFixed(2),
         paymentTypeId: 7
       }
-      const response = await processPayment(pspRequest, process.env.REACT_APP_MERCHANT_API_KEY);
+      const response = await processPayment(pspRequest, btoa(process.env.REACT_APP_MERCHANT_API_KEY));
       console.log(response);
       sessionStorage.setItem("paymentId", response.data.paymentId);
       window.location.href = response.data.paymentUrl;

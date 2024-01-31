@@ -5,6 +5,7 @@ using PaymentServiceProvider.Dto;
 using PaymentServiceProvider.Interfaces;
 using PaymentServiceProvider.Models;
 using shared;
+using System.Text;
 
 namespace PaymentServiceProvider.Controllers
 {
@@ -33,7 +34,8 @@ namespace PaymentServiceProvider.Controllers
         [HttpPost("process-payment")]
         public async Task<IActionResult> ProcessPayment(PSPRequest pspRequest, string apiKey)
         {
-            PaymentResponse paymentResponse = await _paymentService.ProcessPayment(pspRequest, apiKey);
+            string apiKeyString = Encoding.UTF8.GetString(Convert.FromBase64String(apiKey));
+            PaymentResponse paymentResponse = await _paymentService.ProcessPayment(pspRequest, apiKeyString);
 
             return Ok(paymentResponse);
         }
