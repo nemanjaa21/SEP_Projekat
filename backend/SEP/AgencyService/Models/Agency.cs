@@ -7,7 +7,6 @@ namespace AgencyService.Models
         [Required]
         public string Name { get; set; } = null!;
         public List<PaymentService>? PaymentServices { get; set; }
-        public List<User>? Users { get; set; }
         public List<ServiceOfferItem>? ServiceOfferItems { get; set;}
     }
 }

@@ -58,7 +58,7 @@ const CardForm = () => {
             onChange={handleChange}
           />
           <TextField
-            type="text"
+            type="password"
             name="SecurityCode"
             value={formData.SecurityCode}
             label="Security Code"
