@@ -4,6 +4,7 @@ const authApi = axios.create({
     baseURL: process.env.REACT_APP_AUTH_URL,
     headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1'
     },
 });
 
@@ -11,6 +12,7 @@ const agencyApi = axios.create({
     baseURL: process.env.REACT_APP_AGENCY_URL,
     headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1'
     },
 });
 
@@ -18,6 +20,7 @@ const pspApi = axios.create({
     baseURL: process.env.REACT_APP_PSP_URL,
     headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1'
     },
 });
 
