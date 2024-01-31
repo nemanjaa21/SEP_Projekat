@@ -11,20 +11,27 @@ namespace AuthService.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
-        public AuthServiceImpl(IUnitOfWork unitOfWork, IConfiguration configuration)
+        private readonly ILogger<AuthServiceImpl> _logger;
+        public AuthServiceImpl(IUnitOfWork unitOfWork, IConfiguration configuration, ILogger<AuthServiceImpl> logger)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
-
+            _logger = logger;
         }
         public async Task<string> Login(User user)
         {
             var users = await _unitOfWork.UserRepository.GetAll();
             User? loggedUser = users.FirstOrDefault(u => u.Email == user.Email);
             if (loggedUser == null)
+            {
+                _logger.LogError($"[Login] [User: {user.Email}] - Attempted login with not registered email.");
                 return null!;
+            }
             if (!BCrypt.Net.BCrypt.Verify(user.Password, loggedUser.Password))
+            {
+                _logger.LogError($"[Login] [User: {user.Email}] - Attempted login with incorrect password.");
                 return null!;
+            }
 
             var token = GetToken(loggedUser);
             return token;

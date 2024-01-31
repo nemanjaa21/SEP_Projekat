@@ -4,7 +4,11 @@ using AgencyService.Mapping;
 using AgencyService.Repository;
 using AgencyService.Service;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +37,9 @@ var mapperConfig = new MapperConfiguration(mc =>
 });
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
+var _logger = new LoggerConfiguration().WriteTo.File("C:\\Users\\Zdravko\\Desktop\\SEP_Projekat\\Logs\\logs.log", rollingInterval: RollingInterval.Day).CreateLogger();
+builder.Logging.AddSerilog(_logger);
 
 builder.Services.AddCors(o => o.AddPolicy("CORSpolicy", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
